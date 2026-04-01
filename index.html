@@ -8,6 +8,46 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* Force landscape overlay for portrait mobile */
+#rotate-overlay {
+  display:none;
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  background:#000;
+  z-index:99999;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-family:'League Spartan',sans-serif;
+  color:#fff;
+  text-align:center;
+  padding:20px;
+}
+#rotate-overlay .rotate-icon {
+  font-size:80px;
+  animation:rotatePhone 2s ease-in-out infinite;
+  margin-bottom:20px;
+}
+@keyframes rotatePhone {
+  0%,100%{transform:rotate(0deg);}
+  50%{transform:rotate(90deg);}
+}
+#rotate-overlay p {
+  font-size:22px;
+  font-weight:600;
+  margin:0;
+}
+#rotate-overlay span {
+  font-size:14px;
+  color:#aaa;
+  margin-top:8px;
+  display:block;
+}
+@media screen and (orientation:portrait) and (max-width:900px) {
+  #rotate-overlay { display:flex; }
+}
+</style>
+<style>
 :root {
   --color-text-primary: #fff;
   --color-text-secondary: #aaa;
@@ -99,8 +139,20 @@
 </style>
 </head>
 <body>
+<div id="rotate-overlay">
+  <div class="rotate-icon">📱</div>
+  <p>Rotate your phone</p>
+  <span>This presentation works best in landscape mode</span>
+</div>
 <div class="reveal">
 <div class="slides">
+
+<!-- Slide 0 - QR Code -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:50px;">Scan to follow along</p>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://therac25.omartaheri.com&bgcolor=000000&color=ffffff" style="margin-top:30px;border-radius:12px;">
+  <p style="font-size:20px; color:#aaa; margin-top:20px; font-family:'League Spartan',sans-serif;">therac25.omartaheri.com</p>
+</section>
 
 <!-- Slide 1 -->
 <section data-background-color="#000">
@@ -434,20 +486,25 @@
           <div class="cl" id="cL2" data-rc="2">safety_flag = 0</div>
           <div class="cl" id="cL3" data-rc="3">filter_in_place = NO</div>
           <div class="cl" id="cL4" style="height:8px;"></div>
-          <div class="cl" id="cL5" data-rc="4"><span style="color:#639922;">// Operator selects X-ray mode</span></div>
+          <div class="cl" id="cL5" data-rc="4"><span style="color:#639922;">// Operator selects X-ray mode (first time)</span></div>
           <div class="cl" id="cL6" data-rc="5">beam_energy = <span style="color:#E8943A;">HIGH</span></div>
           <div class="cl" id="cL7" data-rc="6">start_moving_turntable()  <span style="color:#555;">// 8 sec</span></div>
-          <div class="cl" id="cL8" data-rc="7">safety_flag++</div>
+          <div class="cl" id="cL8" data-rc="7">safety_flag++  <span style="color:#555;">// 0 → 1</span></div>
           <div class="cl" id="cL9" style="height:8px;"></div>
-          <div class="cl" id="cL10" data-rc="8"><span style="color:#E8943A;">// Operator switches X → E → X (fast!)</span></div>
-          <div class="cl" id="cL11" data-rc="9">safety_flag++</div>
-          <div class="cl" id="cL12" style="height:8px;"></div>
-          <div class="cl" id="cL13" data-rc="10"><span style="color:#639922;">// Safety check before firing</span></div>
-          <div class="cl" id="cL14" data-rc="11">if (safety_flag <span style="color:#E24B4A;">==</span> 1) {</div>
-          <div class="cl" id="cL15" data-rc="12">  wait_for_turntable()</div>
-          <div class="cl" id="cL16" data-rc="12">}</div>
+          <div class="cl" id="cL10" data-rc="8"><span style="color:#639922;">// Check task sees flag == 1, all good</span></div>
+          <div class="cl" id="cL11" data-rc="9">wait_for_turntable()  <span style="color:#639922;">// filter moves into place</span></div>
+          <div class="cl" id="cL12" data-rc="10">safety_flag = 0  <span style="color:#555;">// reset after check</span></div>
+          <div class="cl" id="cL13" style="height:8px;"></div>
+          <div class="cl" id="cL14" data-rc="11"><span style="color:#E8943A;">// Operator switches X �� E → X (fast!)</span></div>
+          <div class="cl" id="cL15" data-rc="12">safety_flag++  <span style="color:#555;">// 0 → 1 (first setup)</span></div>
+          <div class="cl" id="cL16" data-rc="13">safety_flag++  <span style="color:#555;">// 1 → 2 (second setup, too fast!)</span></div>
           <div class="cl" id="cL17" style="height:8px;"></div>
-          <div class="cl" id="cL18" data-rc="13">fire_beam()</div>
+          <div class="cl" id="cL18" data-rc="14"><span style="color:#639922;">// Check task runs again</span></div>
+          <div class="cl" id="cL19" data-rc="15">if (safety_flag <span style="color:#E24B4A;">==</span> 1) {  <span style="color:#555;">// flag is 2, NOT 1!</span></div>
+          <div class="cl" id="cL20" data-rc="16">  wait_for_turntable()  <span style="color:#555;">// SKIPPED!</span></div>
+          <div class="cl" id="cL21" data-rc="16">}</div>
+          <div class="cl" id="cL22" style="height:8px;"></div>
+          <div class="cl" id="cL23" data-rc="17">fire_beam()  <span style="color:#E24B4A;">// NO FILTER!</span></div>
         </div>
       </div>
     </div>
@@ -460,22 +517,26 @@
       {lines:[1],cls:'on',vars:{beam:['LOW','#378ADD']},msg:'Beam energy starts at LOW (electron mode).'},
       {lines:[2],cls:'on',vars:{flag:['0','#378ADD']},msg:'Safety flag starts at 0 — no setup in progress.'},
       {lines:[3],cls:'on',vars:{filter:['NO','#E24B4A']},msg:'Filter is not in the beam path yet.'},
-      {lines:[5],cls:'on',vars:{},msg:'Operator selects X-ray mode...'},
+      {lines:[5],cls:'on',vars:{},msg:'Operator selects X-ray mode for the first time...'},
       {lines:[6],cls:'on',vars:{beam:['HIGH','#E8943A']},msg:'Beam energy set to HIGH — this is X-ray power.'},
       {lines:[7],cls:'on',vars:{turntable:['Moving...','#E8943A']},msg:'Turntable starts moving the filter into place. Takes 8 seconds...'},
-      {lines:[8],cls:'on',vars:{flag:['1','#639922']},msg:'Setup task done → safety_flag incremented to 1.'},
-      {lines:[10],cls:'warn',vars:{},msg:'Operator notices a typo, quickly switches E → X within 8 seconds!'},
-      {lines:[11],cls:'bad',vars:{flag:['2','#E24B4A'],turntable:['Interrupted!','#E24B4A']},msg:'Setup runs AGAIN → flag is now 2. Turntable was interrupted, filter still NOT in place!'},
-      {lines:[13],cls:'on',vars:{},msg:'Check task runs the safety check before firing the beam...'},
-      {lines:[14],cls:'warn',vars:{patient:['DANGER','#E8943A']},msg:'safety_flag == 1? → flag is 2, not 1. Condition is FALSE!'},
-      {lines:[15,16],cls:'warn',vars:{},msg:'wait_for_turntable() is SKIPPED. Nobody checks if the filter is in place.'},
-      {lines:[18],cls:'bad',vars:{patient:['DEAD','#E24B4A']},msg:'BEAM FIRES. High energy, no filter. 25,000 rads. Patient killed.'},
+      {lines:[8],cls:'on',vars:{flag:['1','#639922']},msg:'Setup task done → safety_flag: 0 → 1.'},
+      {lines:[10],cls:'on',vars:{},msg:'Check task sees flag == 1. Good — it processes the request.'},
+      {lines:[11],cls:'on',vars:{filter:['YES','#639922'],turntable:['Done','#639922']},msg:'Turntable finishes. Filter is now in place. Everything is safe.'},
+      {lines:[12],cls:'on',vars:{flag:['0','#378ADD']},msg:'Check task resets safety_flag back to 0. Cycle complete.'},
+      {lines:[14],cls:'warn',vars:{},msg:'Operator notices a typo! Quickly switches X → E → X within 8 seconds.'},
+      {lines:[15],cls:'warn',vars:{flag:['1','#E8943A'],turntable:['Moving...','#E8943A'],filter:['NO','#E24B4A']},msg:'First setup runs → flag: 0 → 1. Turntable starts moving again...'},
+      {lines:[16],cls:'bad',vars:{flag:['2','#E24B4A'],turntable:['Interrupted!','#E24B4A']},msg:'Second setup runs before check task can process! flag: 1 → 2. Turntable interrupted — filter NOT in place!'},
+      {lines:[18],cls:'on',vars:{},msg:'Check task runs the safety check...'},
+      {lines:[19],cls:'warn',vars:{patient:['DANGER','#E8943A']},msg:'safety_flag == 1? → flag is 2, NOT 1. Condition is FALSE!'},
+      {lines:[20,21],cls:'warn',vars:{},msg:'wait_for_turntable() is SKIPPED. Nobody checks if the filter is in place.'},
+      {lines:[23],cls:'bad',vars:{patient:['DEAD','#E24B4A']},msg:'BEAM FIRES. High energy, no filter. 25,000 rads. Patient killed.'},
     ];
 
     var rcIdx = -1;
 
     function clearAll(){
-      for(var i=0;i<=21;i++){var e=document.getElementById('cL'+i);if(e)e.className='cl';}
+      for(var i=0;i<=23;i++){var e=document.getElementById('cL'+i);if(e)e.className='cl';}
     }
 
     function resetVars(){
