@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-text-primary: #fff;
+  --color-text-secondary: #aaa;
+  --color-background-secondary: #1a1a2e;
+  --color-background-danger: rgba(226,75,74,0.12);
+  --color-background-success: rgba(99,153,34,0.12);
+  --color-border-tertiary: #333;
+  --color-border-primary: #666;
+  --color-border-info: #378ADD;
+  --border-radius-lg: 12px;
+  --border-radius-md: 8px;
+  --font-mono: 'Courier New', monospace;
+}
+
+.reveal, .reveal h1, .reveal h2, .reveal h3, .reveal p, .reveal li, .reveal span, .reveal div {
+  font-family: 'League Spartan', sans-serif;
+}
+.reveal .slides section {
+  background: #000;
+}
+.reveal {
+  background: #000;
+}
+.reveal .slide-background {
+  background: #000;
+}
+.slide-title {
+  font-size: 80px;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'League Spartan', sans-serif;
+}
+
+/* Slide 4 styles */
+.sec { margin: 0 0 1.2rem; }
+.label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; text-align: left; }
+.val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px; }
+.card { flex: 1; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 0.8rem 1rem; }
+.bar-wrap { position: relative; height: 48px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); overflow: hidden; margin-bottom: 6px; border: 0.5px solid var(--color-border-tertiary); }
+.bar { height: 100%; border-radius: var(--border-radius-md) 0 0 var(--border-radius-md); transition: width 0.6s ease; }
+.bar-label { position: absolute; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 500; padding: 0 10px; white-space: nowrap; }
+.limit-line { position: absolute; top: 0; bottom: 0; width: 2px; background: #E24B4A; z-index: 2; }
+.limit-tag { position: absolute; top: -20px; font-size: 11px; color: #E24B4A; font-weight: 500; white-space: nowrap; transform: translateX(-50%); }
+.bit-row { display: flex; gap: 2px; margin: 6px 0; flex-wrap: wrap; }
+.bit { width: 18px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: var(--font-mono); border-radius: 3px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.bit.on { background: #378ADD; color: #fff; border-color: #378ADD; }
+.bit.sign { border-color: #E24B4A; }
+.bit.sign.on { background: #E24B4A; color: #fff; }
+.bit.exp { border-color: #E8943A; }
+.bit.exp.on { background: #E8943A; color: #fff; }
+.bit.mantissa { border-color: #378ADD; }
+.bit.mantissa.on { background: #378ADD; color: #fff; }
+.bit.overflow { background: #E24B4A; color: #fff; border-color: #A32D2D; animation: pulse 0.8s ease infinite; }
+.ieee-legend { display: flex; gap: 14px; font-size: 11px; color: var(--color-text-secondary); margin: 4px 0 8px; }
+.ieee-legend span { display: flex; align-items: center; gap: 4px; }
+.part-label { font-size: 10px; color: var(--color-text-secondary); text-align: center; margin-top: 2px; }
+.ieee-group { display: flex; flex-direction: column; align-items: center; }
+.ieee-groups { display: flex; gap: 6px; align-items: flex-start; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.crash-msg { color: #E24B4A; font-weight: 500; font-size: 14px; padding: 8px 12px; background: var(--color-background-danger); border-radius: var(--border-radius-md); display: none; margin-top: 8px; text-align: left; }
+.crash-msg.show { display: block; }
+.safe-msg { color: #639922; font-weight: 500; font-size: 14px; padding: 8px 12px; background: var(--color-background-success); border-radius: var(--border-radius-md); display: none; margin-top: 8px; text-align: left; }
+.safe-msg.show { display: block; }
+.slider-row { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+.slider-row input[type=range] { flex: 1; }
+.slider-row .readout { min-width: 80px; text-align: right; font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+.legend { display: flex; gap: 16px; font-size: 12px; color: var(--color-text-secondary); margin: 6px 0 0; }
+.legend span { display: flex; align-items: center; gap: 4px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.scenario-btn { cursor: pointer; transition: all 0.2s; }
+.scenario-btn:hover { border-color: var(--color-border-primary) !important; }
+.scenario-btn.active { border: 2px solid var(--color-border-info) !important; }
+.mono { font-family: var(--font-mono); }
+.track-wrap { position: relative; height: 120px; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); overflow: hidden; margin: 12px 0; }
+.scud { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #E24B4A; top: 50%; transform: translateY(-50%); transition: left 0.4s ease; }
+.scud-label { position: absolute; font-size: 11px; font-weight: 500; color: #E24B4A; top: calc(50% - 18px); transition: left 0.4s ease; }
+.gate { position: absolute; height: 60px; top: 50%; transform: translateY(-50%); border: 2px dashed #378ADD; border-radius: 8px; background: rgba(55,138,221,0.08); transition: left 0.4s ease, width 0.1s; }
+.gate-label { position: absolute; font-size: 11px; font-weight: 500; color: #378ADD; bottom: calc(50% + 38px); transition: left 0.4s ease; }
+.miss-msg { color: #E24B4A; font-weight: 500; font-size: 14px; padding: 8px 12px; background: var(--color-background-danger); border-radius: var(--border-radius-md); display: none; margin-top: 8px; text-align: left; }
+.miss-msg.show { display: block; }
+.hit-msg { color: #639922; font-weight: 500; font-size: 14px; padding: 8px 12px; background: var(--color-background-success); border-radius: var(--border-radius-md); display: none; margin-top: 8px; text-align: left; }
+.hit-msg.show { display: block; }
+.binary-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 16px; border: 0.5px solid var(--color-border-tertiary); margin: 8px 0; font-family: var(--font-mono); font-size: 13px; line-height: 1.8; color: var(--color-text-primary); overflow-x: auto; text-align: left; }
+.highlight { color: #E24B4A; font-weight: 500; }
+.step-row { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0; }
+.step-num { width: 24px; height: 24px; border-radius: 50%; background: rgba(55,138,221,0.15); color: #378ADD; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
+.step-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; text-align: left; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- Slide 1 -->
+<section data-background-color="#000">
+  <p class="slide-title">When Architecture Kills</p>
+  <p style="font-size:36px; color:#aaa; margin-top:20px; font-family:'League Spartan',sans-serif;">Therac-25</p>
+</section>
+
+<!-- Slide 2 -->
+<section data-background-color="#000">
+  <p class="slide-title">The only day that I was focused in a lecture.</p>
+  <img src="explode.gif" style="max-width:70%; max-height:50vh; border-radius:8px; margin-top:30px;">
+</section>
+
+<!-- Slide 3 - Bonus -->
+<section data-background-color="#000">
+  <p class="slide-title">+ 2 Bonus</p>
+  <p style="font-size:36px; color:#aaa; margin-top:20px; font-family:'League Spartan',sans-serif;">2 more incidents</p>
+</section>
+
+<!-- Slide 4 - Ariane 5 -->
+<section data-background-color="#000">
+  <p class="slide-title">Ariane 5</p>
+</section>
+
+<!-- Slide 5 -->
+<section data-background-color="#000" data-background-iframe="https://www.youtube.com/embed/gp_D8r-2hwk?enablejsapi=1" data-background-interactive>
+</section>
+
+<!-- Slide 4 -->
+<section data-background-color="#000">
+  <div style="font-size:16px; text-align:left; max-width:1200px; margin:0 auto;">
+    <div class="sec">
+      <p class="label" style="font-size:14px; font-weight:500; color:var(--color-text-primary); margin-bottom:4px;">Simulate: horizontal velocity (BH value)</p>
+      <p class="label">Drag the slider to see what happens as the rocket accelerates.</p>
+
+      <div class="slider-row">
+        <span style="font-size:12px; color:var(--color-text-secondary);">0</span>
+        <input type="range" min="0" max="50000" value="36000" step="100" id="vel-slider" oninput="updateSim(this.value)">
+        <span class="readout" id="vel-val">36,000</span>
+      </div>
+
+      <div class="bar-wrap" id="bar-container">
+        <div class="limit-line" style="left:65.5%;"><span class="limit-tag">16-bit max: 32,767</span></div>
+        <div class="bar" id="vel-bar" style="width:36%; background:#378ADD;"></div>
+        <span class="bar-label" id="bar-label" style="left:10px; color:#fff;">BH = 18,000</span>
+      </div>
+      <div class="legend">
+        <span><span class="dot" style="background:#378ADD;"></span> Safe (fits in 16-bit)</span>
+        <span><span class="dot" style="background:#E24B4A;"></span> Overflow (exceeds 32,767)</span>
+      </div>
+
+      <div class="safe-msg show" id="safe-msg">Value fits in 16-bit integer. Conversion succeeds.</div>
+      <div class="crash-msg" id="crash-msg">OPERAND ERROR — value exceeds 32,767. The SRI crashes. The rocket is lost.</div>
+    </div>
+
+    <div class="sec">
+      <p class="label" style="font-size:14px; font-weight:500; color:var(--color-text-primary); margin-bottom:8px;">What the bits look like (IEEE 754)</p>
+      <p class="label" style="margin-bottom:4px;">64-bit floating point (source) — real IEEE 754 encoding</p>
+      <div class="ieee-legend">
+        <span><span class="dot" style="background:#E24B4A;"></span> Sign (1 bit)</span>
+        <span><span class="dot" style="background:#E8943A;"></span> Exponent (11 bits)</span>
+        <span><span class="dot" style="background:#378ADD;"></span> Mantissa (52 bits)</span>
+      </div>
+      <div class="ieee-groups">
+        <div class="ieee-group">
+          <div class="bit-row" id="bits64-sign" style="margin:0;"></div>
+          <div class="part-label">S</div>
+        </div>
+        <div class="ieee-group">
+          <div class="bit-row" id="bits64-exp" style="margin:0;"></div>
+          <div class="part-label">Exponent</div>
+        </div>
+        <div class="ieee-group">
+          <div class="bit-row" id="bits64-mantissa" style="margin:0;"></div>
+          <div class="part-label">Mantissa (fraction)</div>
+        </div>
+      </div>
+      <p class="label" style="margin-top:10px; line-height:1.7; font-size:14px;" id="ieee-explain"></p>
+
+      <p class="label" style="margin:12px 0 4px;">16-bit signed integer (destination) — what the code tries to squeeze it into</p>
+      <div class="bit-row" id="bits16"></div>
+      <p class="label" style="margin-top:6px;" id="bit-explain"></p>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 5 -->
+<section data-background-color="#000">
+  <p class="slide-title">370M Mistake</p>
+  <img src="money.gif" style="max-width:60%; max-height:50vh; border-radius:8px; margin-top:30px;">
+</section>
+
+<!-- Slide 6 -->
+<section data-background-color="#000">
+  <p class="slide-title">Patriots Clock</p>
+</section>
+
+<!-- Slide 7 -->
+<section data-background-color="#000">
+  <img src="saddam1" style="max-width:90%; max-height:80vh; border-radius:8px;">
+</section>
+
+<!-- Slide 8 -->
+<section data-background-color="#000">
+  <img src="saddam2.webp" style="max-width:90%; max-height:80vh; border-radius:8px;">
+</section>
+
+<!-- Slide 9 -->
+<section data-background-color="#000">
+  <div style="display:flex; align-items:center; justify-content:center; gap:40px;">
+    <img src="rocket.gif" class="rocket-grow" style="max-height:60vh; border-radius:8px;">
+    <img src="Saudi-Arabia.gif" style="max-height:30vh; border-radius:8px;">
+  </div>
+  <style>
+    .rocket-grow {
+      animation: rocketScale 4s ease-out forwards;
+    }
+    @keyframes rocketScale {
+      0%   { transform: scale(0.4); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</section>
+
+<!-- Slide 10 -->
+<section data-background-color="#000">
+  <img src="patriot.jpg" style="max-width:90%; max-height:80vh; border-radius:8px;">
+</section>
+
+<!-- Slide 11 - Binary problem explanation -->
+<section data-background-color="#000">
+  <div style="font-size:16px; text-align:left; max-width:900px; margin:0 auto;">
+    <div class="sec">
+      <p class="label" style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px;">The problem: 1/10 cannot be represented exactly in binary</p>
+
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-text">The Patriot's clock counts time by incrementing a counter every <strong>0.1 seconds</strong>.</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-text">But 1/10 in binary is <strong>repeating</strong> — like how 1/3 = 0.333... never ends in decimal.</div>
+      </div>
+
+      <div class="binary-box">
+        <div>1/10 in decimal = 0.1 (exact)</div>
+        <div style="margin-top:4px;">1/10 in binary&nbsp; = 0.0001100110011001100110011...<span class="highlight">&#8734; repeating</span></div>
+        <div style="margin-top:4px;">Patriot's 24-bit = 0.00011001100110011001100<span class="highlight" style="text-decoration:line-through;">11...</span> <span style="color:var(--color-text-secondary);">(chopped!)</span></div>
+        <div style="margin-top:8px;font-size:12px;color:var(--color-text-secondary);">Error per tick: ~0.000000095 seconds (&asymp; 9.5 &times; 10&#8315;&#8312; s)</div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-text">That tiny error <strong>accumulates</strong> with every tick. After 100 hours, it adds up catastrophically.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 12 - Drift calculator & tracking gate -->
+<section data-background-color="#000">
+  <div style="font-size:16px; text-align:left; max-width:900px; margin:0 auto;">
+    <div class="sec">
+      <p class="label" style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;">How the error grows over time</p>
+      <p class="label">The Dhahran battery had been running for about 100 hours without a reboot.</p>
+
+      <div class="slider-row">
+        <span style="font-size:12px;color:var(--color-text-secondary);">0h</span>
+        <input type="range" min="0" max="100" value="100" step="1" id="hours-slider" oninput="updateDrift(this.value)">
+        <span class="readout" id="hours-val">100 h</span>
+      </div>
+
+      <div class="row">
+        <div class="card">
+          <p class="label">clock drift</p>
+          <p class="val" id="drift-val" style="font-size:18px;color:#E24B4A;">0.3433 s</p>
+        </div>
+        <div class="card">
+          <p class="label">Scud speed</p>
+          <p class="val" style="font-size:18px;">~1,676 m/s</p>
+        </div>
+        <div class="card">
+          <p class="label">distance error</p>
+          <p class="val" id="dist-val" style="font-size:18px;color:#E24B4A;">~575 m</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <p class="label" style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;">Tracking gate vs actual Scud position</p>
+      <p class="label">The Patriot looks for the Scud in a "range gate" — a predicted window. Drift shifts the gate away from reality.</p>
+
+      <div class="track-wrap" id="track-area">
+        <div class="gate-label" id="gate-lbl" style="left:260px;">Patriot search gate</div>
+        <div class="gate" id="gate" style="left:250px;width:80px;"></div>
+        <div class="scud-label" id="scud-lbl" style="left:420px;">Actual Scud</div>
+        <div class="scud" id="scud" style="left:420px;"></div>
+      </div>
+
+      <div class="hit-msg" id="hit-msg">Scud is inside the tracking gate. Patriot locks on and intercepts.</div>
+      <div class="miss-msg show" id="miss-msg">Scud is ~575m outside the gate. Patriot sees nothing. No intercept. 28 soldiers killed.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 12 -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:60px;">The program cost</p>
+  <p class="slide-title" style="color:#E24B4A;">$12 Billion</p>
+</section>
+
+<!-- Slide 13 -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:50px; color:#E24B4A;">28 Lives Lost</p>
+  <div style="margin-top:40px;">
+    <p class="slide-title" style="font-size:40px;">128 missiles fired into nothing</p>
+    <p class="slide-title" style="font-size:36px; color:#aaa; margin-top:10px;">each one cost <span style="color:#E24B4A;">$1M</span></p>
+  </div>
+</section>
+
+<!-- Slide 14 - Therac-25 title -->
+<section data-background-color="#000">
+  <p class="slide-title">Therac-25</p>
+  <img src="therac25.jpeg" style="max-width:70%; max-height:60vh; border-radius:8px; margin-top:30px;">
+</section>
+
+<!-- Slide 15 - History -->
+<section data-background-color="#000">
+  <div style="font-size:16px; text-align:left; max-width:900px; margin:0 auto;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:20px;">A Brief History</p>
+
+    <div class="step-row" style="margin:14px 0;">
+      <div class="step-num" style="background:rgba(55,138,221,0.15);color:#378ADD;">1</div>
+      <div class="step-text" style="font-size:15px;">
+        <strong style="color:#378ADD;">1970s — Therac-6 & Therac-20</strong><br>
+        Earlier radiation therapy machines by AECL (Canada). They had <strong>hardware safety interlocks</strong> — physical mechanisms that physically blocked dangerous beam configurations. Software bugs existed, but the hardware caught them.
+      </div>
+    </div>
+
+    <div class="step-row" style="margin:14px 0;">
+      <div class="step-num" style="background:rgba(55,138,221,0.15);color:#378ADD;">2</div>
+      <div class="step-text" style="font-size:15px;">
+        <strong style="color:#378ADD;">1982 — Therac-25 is built</strong><br>
+        AECL builds the Therac-25: smaller, cheaper, more powerful. To save cost, they <strong>removed the hardware interlocks</strong> and relied entirely on software for safety. The code was written by <strong>one programmer</strong>.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Slide 16 - How it works -->
+<section data-background-color="#000">
+  <div style="font-size:16px; text-align:left; max-width:900px; margin:0 auto;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:20px;">How the Therac-25 Works</p>
+
+    <div class="row" style="margin-bottom:20px;">
+      <div class="card" style="text-align:center; border:1px solid #378ADD;">
+        <p class="label" style="color:#378ADD;font-weight:600;">Mode 1: Electron Beam</p>
+        <p style="font-size:40px;margin:10px 0;">&#9889;</p>
+        <p class="val" style="font-size:14px;color:#aaa;">Low energy electrons hit the patient directly.<br>Used for shallow tumors.</p>
+        <p class="val" style="font-size:14px;margin-top:8px;color:#378ADD;">No filter needed</p>
+      </div>
+      <div class="card" style="text-align:center; border:1px solid #E8943A;">
+        <p class="label" style="color:#E8943A;font-weight:600;">Mode 2: X-ray Beam</p>
+        <p style="font-size:40px;margin:10px 0;">&#9762;</p>
+        <p class="val" style="font-size:14px;color:#aaa;">High energy beam hits a <strong>metal target</strong> to produce X-rays.<br>Used for deep tumors.</p>
+        <p class="val" style="font-size:14px;margin-top:8px;color:#E8943A;">Metal filter MUST be in place</p>
+      </div>
+    </div>
+
+    <div class="binary-box" style="text-align:center;font-family:'League Spartan',sans-serif;">
+      <p style="font-size:14px;color:#aaa;margin-bottom:8px;">The machine has a rotating <strong style="color:#fff;">turntable</strong> that swings the metal filter in or out of the beam path.</p>
+      <p style="font-size:16px;color:#fff;">X-ray mode + filter in place = <span style="color:#639922;">Safe dose</span></p>
+      <p style="font-size:16px;color:#fff;margin-top:4px;">X-ray mode + filter <strong>NOT</strong> in place = <span style="color:#E24B4A;">100x overdose = death</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 17 - Therac-25 Simulator -->
+<section data-background-color="#000" data-background-iframe="therac-25/index.html" data-background-interactive>
+</section>
+
+<!-- Slide 21 - Code example (interactive) -->
+<section data-background-color="#000">
+  <style>
+    .rc-wrap{display:flex;gap:24px;max-width:1100px;margin:0 auto;font-family:'JetBrains Mono','Fira Code',monospace;font-size:13px;}
+    .rc-vars{flex:0 0 260px;background:#0d1117;border:1px solid #333;border-radius:8px;padding:16px;}
+    .rc-vars h3{font-family:'League Spartan',sans-serif;font-size:16px;color:#fff;margin:0 0 14px;}
+    .rc-var{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin:4px 0;border-radius:6px;background:#161b22;border:1px solid #222;}
+    .rc-var-name{color:#aaa;font-size:12px;}
+    .rc-var-val{font-weight:700;font-size:14px;transition:all 0.3s;}
+    .rc-turntable{display:flex;align-items:center;gap:8px;margin-top:14px;padding:10px;background:#161b22;border:1px solid #222;border-radius:6px;}
+    .rc-turntable-icon{width:40px;height:40px;border-radius:50%;border:3px solid #444;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.4s;}
+    .rc-code{flex:1;background:#0d1117;border:1px solid #333;border-radius:8px;padding:16px;overflow-y:auto;max-height:70vh;}
+    .rc-code h3{font-family:'League Spartan',sans-serif;font-size:16px;color:#fff;margin:0 0 14px;}
+    .rc-line{padding:4px 10px;border-radius:4px;line-height:1.8;white-space:pre;transition:all 0.3s;color:#8b949e;}
+    .rc-line.active{background:#1a3a1a;color:#fff;border-left:3px solid #639922;}
+    .rc-line.danger{background:#3a1a1a;color:#fff;border-left:3px solid #E24B4A;}
+    .rc-line.skip{background:#3a2a1a;color:#fff;border-left:3px solid #E8943A;}
+    .rc-narrator{min-height:48px;margin-top:12px;padding:10px 14px;background:#161b22;border:1px solid #333;border-radius:6px;font-family:'League Spartan',sans-serif;font-size:14px;color:#ccc;line-height:1.5;}
+    .rc-btn{display:inline-block;padding:8px 24px;margin-top:12px;border:none;border-radius:6px;font-family:'League Spartan',sans-serif;font-size:14px;font-weight:600;cursor:pointer;background:#378ADD;color:#fff;transition:all 0.2s;}
+    .rc-btn:hover{background:#2a6fb5;}
+    .rc-btn.reset{background:#333;margin-left:8px;}
+    .rc-btn.reset:hover{background:#555;}
+  </style>
+
+  <div style="text-align:left;max-width:1100px;margin:0 auto;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:12px;">How it happened in code</p>
+    <div class="rc-wrap">
+      <!-- Left: Variables -->
+      <div class="rc-vars">
+        <h3>Shared State</h3>
+        <div class="rc-var">
+          <span class="rc-var-name">beam_energy</span>
+          <span class="rc-var-val" id="rc-beam" style="color:#378ADD;">LOW</span>
+        </div>
+        <div class="rc-var">
+          <span class="rc-var-name">safety_flag</span>
+          <span class="rc-var-val" id="rc-flag" style="color:#378ADD;">0</span>
+        </div>
+        <div class="rc-var">
+          <span class="rc-var-name">filter_in_place</span>
+          <span class="rc-var-val" id="rc-filter" style="color:#E24B4A;">NO</span>
+        </div>
+        <div class="rc-turntable">
+          <div class="rc-turntable-icon" id="rc-turntable-icon">&#9881;</div>
+          <div>
+            <div style="color:#aaa;font-size:11px;">Turntable</div>
+            <div style="color:#fff;font-size:13px;font-weight:600;" id="rc-turntable-status">Idle</div>
+          </div>
+        </div>
+        <div class="rc-var" style="margin-top:14px;border-color:#E24B4A33;">
+          <span class="rc-var-name">patient</span>
+          <span class="rc-var-val" id="rc-patient" style="color:#639922;">Safe</span>
+        </div>
+      </div>
+
+      <!-- Right: Code -->
+      <div class="rc-code">
+        <h3>Pseudocode <span style="font-size:12px;color:#555;font-weight:400;">— click Next Step</span></h3>
+        <div class="rc-line" id="rcL0"><span style="color:#639922;">// Initialize machine</span></div>
+        <div class="rc-line" id="rcL1">beam_energy = <span style="color:#378ADD;">LOW</span></div>
+        <div class="rc-line" id="rcL2">safety_flag = <span style="color:#378ADD;">0</span></div>
+        <div class="rc-line" id="rcL3">filter_in_place = <span style="color:#E24B4A;">NO</span></div>
+        <div class="rc-line" id="rcL4">&nbsp;</div>
+        <div class="rc-line" id="rcL5"><span style="color:#639922;">// Operator selects X-ray mode</span></div>
+        <div class="rc-line" id="rcL6">beam_energy = <span style="color:#E8943A;">HIGH</span></div>
+        <div class="rc-line" id="rcL7">start_moving_turntable()  <span style="color:#555;">// 8 sec...</span></div>
+        <div class="rc-line" id="rcL8">safety_flag++             <span style="color:#555;">// flag = 1</span></div>
+        <div class="rc-line" id="rcL9">&nbsp;</div>
+        <div class="rc-line" id="rcL10"><span style="color:#639922;">// Operator switches E → X quickly</span></div>
+        <div class="rc-line" id="rcL11">safety_flag++             <span style="color:#555;">// flag = ?</span></div>
+        <div class="rc-line" id="rcL12">&nbsp;</div>
+        <div class="rc-line" id="rcL13"><span style="color:#639922;">// Safety check before firing</span></div>
+        <div class="rc-line" id="rcL14"><span style="color:#E24B4A;">if</span> (safety_flag <span style="color:#E24B4A;">==</span> 1) {</div>
+        <div class="rc-line" id="rcL15">  wait_for_turntable()</div>
+        <div class="rc-line" id="rcL16">}</div>
+        <div class="rc-line" id="rcL17">&nbsp;</div>
+        <div class="rc-line" id="rcL18"><span style="color:#E24B4A;font-weight:700;">fire_beam()</span></div>
+        <div class="rc-line" id="rcL19">&nbsp;</div>
+        <div class="rc-line" id="rcL20"><span style="color:#639922;">// The fix: one character</span></div>
+        <div class="rc-line" id="rcL21"><span style="color:#639922;">if</span> (safety_flag <span style="color:#639922;">>=</span> 1) { ... }</div>
+      </div>
+    </div>
+
+    <div class="rc-narrator" id="rc-narrator">Press <b>Next Step</b> to walk through the code line by line.</div>
+    <div style="margin-top:6px;">
+      <button class="rc-btn" id="rc-next-btn" onclick="rcStep()">Next Step</button>
+      <button class="rc-btn reset" onclick="rcReset()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var step = -1;
+    var vars = {beam:'LOW',flag:0,filter:'NO',turntable:'Idle',patient:'Safe'};
+
+    function u(){
+      var b=document.getElementById('rc-beam');
+      var f=document.getElementById('rc-flag');
+      var fi=document.getElementById('rc-filter');
+      var t=document.getElementById('rc-turntable-status');
+      var ti=document.getElementById('rc-turntable-icon');
+      var p=document.getElementById('rc-patient');
+      b.textContent=vars.beam;
+      b.style.color=vars.beam==='HIGH'?'#E8943A':'#378ADD';
+      f.textContent=vars.flag;
+      f.style.color=vars.flag===0?'#378ADD':vars.flag===1?'#639922':'#E24B4A';
+      fi.textContent=vars.filter;
+      fi.style.color=vars.filter==='YES'?'#639922':'#E24B4A';
+      t.textContent=vars.turntable;
+      ti.style.borderColor=vars.turntable==='Moving...'?'#E8943A':vars.turntable==='Interrupted!'?'#E24B4A':'#444';
+      ti.style.transform=vars.turntable==='Moving...'?'rotate(45deg)':'rotate(0deg)';
+      p.textContent=vars.patient;
+      p.style.color=vars.patient==='Safe'?'#639922':vars.patient==='DANGER'?'#E8943A':'#E24B4A';
+    }
+
+    function clearLines(){for(var i=0;i<=21;i++){var l=document.getElementById('rcL'+i);if(l)l.className='rc-line';}}
+
+    function hl(id,cls){var l=document.getElementById('rcL'+id);if(l)l.className='rc-line '+(cls||'active');}
+
+    var steps=[
+      function(){clearLines();hl(0);hl(1);hl(2);hl(3);vars={beam:'LOW',flag:0,filter:'NO',turntable:'Idle',patient:'Safe'};u();return 'Machine initializes. Beam is LOW, safety flag is 0, filter is not in place.';},
+      function(){clearLines();hl(5);return 'Operator sits down and selects <b>X-ray mode</b>...';},
+      function(){clearLines();hl(6);vars.beam='HIGH';u();return 'Software sets beam energy to <b style="color:#E8943A;">HIGH</b>. This is X-ray power level.';},
+      function(){clearLines();hl(7);vars.turntable='Moving...';u();return 'Turntable starts rotating to move the filter into place. This takes <b>8 seconds</b>...';},
+      function(){clearLines();hl(8);vars.flag=1;u();return 'Setup task increments safety_flag to <b style="color:#639922;">1</b>. The check task should catch this.';},
+      function(){clearLines();hl(10);return 'But the operator made a typo! They quickly switch to <b>E</b> mode, then back to <b>X</b> — all within 8 seconds.';},
+      function(){clearLines();hl(11,'danger');vars.flag=2;vars.turntable='Interrupted!';u();return 'Setup task runs <b>again</b> and increments flag: 1 + 1 = <b style="color:#E24B4A;">2</b>. Turntable was interrupted — filter is <b>still NOT in place</b>!';},
+      function(){clearLines();hl(13);return 'Now the check task runs the safety check before firing...';},
+      function(){clearLines();hl(14,'skip');vars.patient='DANGER';u();return '<b style="color:#E8943A;">safety_flag == 1?</b> → flag is <b>2</b>, not 1. Condition is <b style="color:#E24B4A;">FALSE</b>. Safety check is <b>SKIPPED</b>.';},
+      function(){clearLines();hl(15,'skip');hl(16,'skip');return '<b>wait_for_turntable()</b> is never called. Nobody verifies the filter is in place.';},
+      function(){clearLines();hl(18,'danger');vars.patient='DEAD';u();return '<b style="color:#E24B4A;">BEAM FIRES.</b> High energy X-ray. No filter. Patient receives <b>25,000 rads</b> instead of 200. Lethal dose.';},
+      function(){clearLines();hl(20);hl(21,'active');return 'The fix: <b style="color:#639922;">>=</b> instead of <b style="color:#E24B4A;">==</b>. One character. Would have caught flag = 2, 3, anything. Three lives lost.';},
+    ];
+
+    window.rcStep=function(){
+      step++;
+      if(step>=steps.length){step=steps.length-1;return;}
+      var msg=steps[step]();
+      document.getElementById('rc-narrator').innerHTML=msg;
+      if(step>=steps.length-1){document.getElementById('rc-next-btn').textContent='Done';document.getElementById('rc-next-btn').style.background='#333';}
+    };
+
+    window.rcReset=function(){
+      step=-1;
+      clearLines();
+      vars={beam:'LOW',flag:0,filter:'NO',turntable:'Idle',patient:'Safe'};
+      u();
+      document.getElementById('rc-narrator').innerHTML='Press <b>Next Step</b> to walk through the code line by line.';
+      document.getElementById('rc-next-btn').textContent='Next Step';
+      document.getElementById('rc-next-btn').style.background='#378ADD';
+    };
+  })();
+  </script>
+</section>
+
+<!-- Slide 21 - Therac-25 cost -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:50px; color:#E24B4A;">6 patients overdosed</p>
+  <p class="slide-title" style="font-size:50px; color:#E24B4A; margin-top:10px;">3 killed</p>
+  <div style="margin-top:30px;">
+    <p style="font-size:24px; color:#aaa; font-family:'League Spartan',sans-serif;">by a bug that only triggered if you typed fast enough</p>
+  </div>
+</section>
+
+<!-- Slide 22 - Lesson -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:55px;">What do all these have in common?</p>
+  <div style="margin-top:30px; font-family:'League Spartan',sans-serif;">
+    <p style="font-size:28px; color:#E24B4A; margin:10px 0;">$370M rocket — integer overflow</p>
+    <p style="font-size:28px; color:#E24B4A; margin:10px 0;">28 soldiers — floating point truncation</p>
+    <p style="font-size:28px; color:#E24B4A; margin:10px 0;">3 patients — race condition</p>
+  </div>
+  <p style="font-size:22px; color:#aaa; margin-top:30px; font-family:'League Spartan',sans-serif;">Bugs that were "too small to matter" — until they weren't.</p>
+</section>
+
+<!-- Slide 23 - Closing -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:60px;">Test your code.</p>
+  <p class="slide-title" style="font-size:60px; margin-top:10px;">Review your code.</p>
+  <p class="slide-title" style="font-size:60px; margin-top:10px; color:#E24B4A;">Lives depend on it.</p>
+</section>
+
+<!-- Slide 24 - Thank you -->
+<section data-background-color="#000">
+  <p class="slide-title">Thank You</p>
+  <p style="font-size:24px; color:#aaa; margin-top:20px; font-family:'League Spartan',sans-serif;">Any questions?</p>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  controls: true,
+  progress: true,
+  center: true,
+  transition: 'slide'
+});
+
+// Slide 4 interactive logic
+
+// Get real IEEE 754 bits from a float
+function float64ToBits(value) {
+  const buf = new ArrayBuffer(8);
+  new Float64Array(buf)[0] = value;
+  const bytes = new Uint8Array(buf);
+  let bits = [];
+  // Read bytes in reverse (big-endian bit order)
+  for (let i = 7; i >= 0; i--) {
+    for (let b = 7; b >= 0; b--) {
+      bits.push((bytes[i] >> b) & 1);
+    }
+  }
+  return bits; // 64 bits: [0]=sign, [1-11]=exponent, [12-63]=mantissa
+}
+
+function initBits() {
+  // Sign (1 bit)
+  const signEl = document.getElementById('bits64-sign');
+  if (!signEl) return;
+  signEl.innerHTML = '';
+  const sd = document.createElement('div');
+  sd.className = 'bit sign';
+  sd.textContent = '0';
+  sd.id = 'b64-0';
+  signEl.appendChild(sd);
+
+  // Exponent (11 bits)
+  const expEl = document.getElementById('bits64-exp');
+  expEl.innerHTML = '';
+  for (let i = 1; i <= 11; i++) {
+    const d = document.createElement('div');
+    d.className = 'bit exp';
+    d.textContent = '0';
+    d.id = 'b64-' + i;
+    expEl.appendChild(d);
+  }
+
+  // Mantissa (52 bits)
+  const manEl = document.getElementById('bits64-mantissa');
+  manEl.innerHTML = '';
+  for (let i = 12; i < 64; i++) {
+    const d = document.createElement('div');
+    d.className = 'bit mantissa';
+    d.textContent = '0';
+    d.id = 'b64-' + i;
+    manEl.appendChild(d);
+  }
+
+  // 16-bit
+  const bits16 = document.getElementById('bits16');
+  bits16.innerHTML = '';
+  for (let i = 0; i < 16; i++) {
+    const d = document.createElement('div');
+    d.className = 'bit';
+    d.textContent = '0';
+    d.id = 'b16-' + i;
+    if (i === 0) d.classList.add('sign');
+    bits16.appendChild(d);
+  }
+}
+
+function intToBits16(v) {
+  if (v < 0) v = 65536 + v;
+  let bits = [];
+  for (let i = 15; i >= 0; i--) bits.push((v >> i) & 1);
+  return bits;
+}
+
+function updateSim(v) {
+  v = parseInt(v);
+  const velVal = document.getElementById('vel-val');
+  const bar = document.getElementById('vel-bar');
+  const barLabel = document.getElementById('bar-label');
+  const safeMsg = document.getElementById('safe-msg');
+  const crashMsg = document.getElementById('crash-msg');
+  const bitExplain = document.getElementById('bit-explain');
+  const ieeeExplain = document.getElementById('ieee-explain');
+
+  velVal.textContent = v.toLocaleString();
+  const pct = Math.min((v / 50000) * 100, 100);
+  const overflow = v > 32767;
+
+  bar.style.width = pct + '%';
+  bar.style.background = overflow ? '#E24B4A' : '#378ADD';
+  barLabel.textContent = 'BH = ' + v.toLocaleString();
+
+  if (overflow) {
+    safeMsg.classList.remove('show');
+    crashMsg.classList.add('show');
+  } else {
+    safeMsg.classList.add('show');
+    crashMsg.classList.remove('show');
+  }
+
+  // Real IEEE 754 64-bit representation
+  const bits = float64ToBits(v);
+
+  // Sign bit
+  const signBit = bits[0];
+  const signEl = document.getElementById('b64-0');
+  if (signEl) {
+    signEl.textContent = signBit;
+    signEl.className = 'bit sign' + (signBit ? ' on' : '');
+  }
+
+  // Exponent bits (1-11)
+  let expVal = 0;
+  for (let i = 1; i <= 11; i++) {
+    const el = document.getElementById('b64-' + i);
+    if (!el) continue;
+    el.textContent = bits[i];
+    el.className = 'bit exp' + (bits[i] ? ' on' : '');
+    expVal = (expVal << 1) | bits[i];
+  }
+
+  // Mantissa bits (12-63)
+  for (let i = 12; i < 64; i++) {
+    const el = document.getElementById('b64-' + i);
+    if (!el) continue;
+    el.textContent = bits[i];
+    el.className = 'bit mantissa' + (bits[i] ? ' on' : '');
+  }
+
+  // IEEE explanation
+  const realExp = expVal - 1023;
+  if (v === 0) {
+    ieeeExplain.innerHTML = 'Value is 0. All bits are zero.';
+  } else {
+    // Calculate actual mantissa fraction
+    let mantissaFrac = 1;
+    for (let i = 12; i < 64; i++) {
+      if (bits[i]) mantissaFrac += Math.pow(2, -(i - 11));
+    }
+    const computed = Math.pow(-1, signBit) * mantissaFrac * Math.pow(2, realExp);
+    const expBitsStr = bits.slice(1, 12).join('');
+    const mantissaBitsStr = bits.slice(12).join('');
+    ieeeExplain.innerHTML =
+      '<span style="color:#E24B4A;">Sign:</span> ' + signBit + ' → ' + (signBit ? 'negative' : 'positive') +
+      '<br><span style="color:#E8943A;">Exponent bits:</span> ' + expBitsStr + ' = ' + expVal + ' → ' + expVal + ' − 1023 = <b>' + realExp + '</b> → multiply by 2<sup>' + realExp + '</sup> = ' + Math.pow(2, realExp) +
+      '<br><span style="color:#378ADD;">Mantissa bits:</span> ' + mantissaBitsStr + ' → 1.' + mantissaBitsStr.replace(/0+$/, '') + ' = <b>' + mantissaFrac.toFixed(6) + '</b>' +
+      '<br><span style="color:#fff;">Result:</span> ' + (signBit ? '−' : '') + '1 × ' + mantissaFrac.toFixed(6) + ' × 2<sup>' + realExp + '</sup> = <b style="color:#E24B4A;">' + computed.toLocaleString() + '</b>';
+  }
+
+  // 16-bit
+  if (!overflow) {
+    const b = intToBits16(v);
+    for (let i = 0; i < 16; i++) {
+      const el = document.getElementById('b16-' + i);
+      if (!el) continue;
+      el.className = 'bit' + (i === 0 ? ' sign' : '') + (b[i] ? ' on' : '');
+      if (i === 0 && b[i]) el.classList.add('sign', 'on');
+      el.textContent = b[i];
+    }
+    bitExplain.textContent = 'Value ' + v.toLocaleString() + ' fits in 16 bits. Conversion succeeds.';
+  } else {
+    for (let i = 0; i < 16; i++) {
+      const el = document.getElementById('b16-' + i);
+      if (!el) continue;
+      el.className = 'bit overflow';
+      el.textContent = '!';
+    }
+    bitExplain.textContent = 'OVERFLOW: ' + v.toLocaleString() + ' cannot fit in 16 bits. The SRI throws an Operand Error.';
+  }
+}
+
+// Slide 11 - Patriot drift logic
+function updateDrift(h) {
+  h = parseInt(h);
+  document.getElementById('hours-val').textContent = h + ' h';
+
+  const errorPerTick = 9.5367431640625e-8;
+  const ticksPerSec = 10;
+  const totalTicks = h * 3600 * ticksPerSec;
+  const drift = totalTicks * errorPerTick;
+  const scudSpeed = 1676;
+  const distError = drift * scudSpeed;
+
+  document.getElementById('drift-val').textContent = drift.toFixed(4) + ' s';
+  document.getElementById('dist-val').textContent = '~' + Math.round(distError) + ' m';
+
+  const trackEl = document.getElementById('track-area');
+  const trackWidth = trackEl ? trackEl.offsetWidth || 600 : 600;
+  const scale = trackWidth / 800;
+
+  const scudRealPos = trackWidth * 0.65;
+  const gateWidth = 80;
+  const maxShift = 250 * scale;
+  const gateShift = (h / 100) * maxShift;
+  const gateLeft = scudRealPos - gateWidth / 2 - gateShift;
+
+  const scudEl = document.getElementById('scud');
+  const scudLbl = document.getElementById('scud-lbl');
+  const gateEl = document.getElementById('gate');
+  const gateLbl = document.getElementById('gate-lbl');
+  if (scudEl) scudEl.style.left = scudRealPos + 'px';
+  if (scudLbl) scudLbl.style.left = (scudRealPos - 20) + 'px';
+  if (gateEl) gateEl.style.left = gateLeft + 'px';
+  if (gateLbl) gateLbl.style.left = (gateLeft + 10) + 'px';
+
+  const gateRight = gateLeft + gateWidth;
+  const hit = (scudRealPos >= gateLeft && scudRealPos <= gateRight);
+
+  const hitEl = document.getElementById('hit-msg');
+  const missEl = document.getElementById('miss-msg');
+  if (hitEl) hitEl.classList.toggle('show', hit);
+
+  if (missEl) {
+    if (hit) {
+      missEl.classList.remove('show');
+    } else {
+      missEl.classList.add('show');
+      if (h === 0) {
+        missEl.textContent = 'At 0 hours, there is no drift. The system works perfectly.';
+        missEl.style.color = 'var(--color-text-secondary)';
+        missEl.style.background = 'var(--color-background-secondary)';
+      } else {
+        missEl.style.color = '#E24B4A';
+        missEl.style.background = 'var(--color-background-danger)';
+        missEl.textContent = 'Scud is ~' + Math.round(distError) + 'm outside the gate. Patriot sees nothing. No intercept. 28 soldiers killed.';
+      }
+    }
+  }
+}
+
+// Initialize slides on change
+Reveal.on('slidechanged', function(event) {
+  if (event.indexh === 3) {
+    initBits();
+    updateSim(36000);
+  }
+  if (event.indexh === 11) {
+    updateDrift(100);
+  }
+});
+
+// Also init on load
+initBits();
+updateSim(36000);
+</script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Therac-25 Simulator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #000;
+  color: #00cc00;
+  font-family: 'VT323', monospace;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+}
+
+.left-panel {
+  flex: 1.15;
+  display: flex;
+  flex-direction: column;
+  margin: 12px;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  border: 2px solid #333;
+  border-radius: 10px;
+}
+
+.right-panel {
+  flex: 0.85;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 12px 12px 0;
+}
+
+/* Scanlines */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Terminal */
+.terminal-body {
+  flex: 1;
+  padding: 24px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+pre {
+  font-family: 'VT323', monospace;
+  color: #00cc00;
+  font-size: 24px;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.section {
+  margin: 6px 0;
+  padding: 10px 0;
+  border-top: 1px solid #1a2a1a;
+}
+
+.section:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.term-input {
+  background: none;
+  border: none;
+  color: #00cc00;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  letter-spacing: 1px;
+  outline: none;
+  width: 200px;
+  caret-color: #00cc00;
+}
+.term-input::placeholder { color: #1a3a1a; }
+
+.cmd-input {
+  background: none;
+  border: none;
+  color: #00cc00;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  letter-spacing: 1px;
+  outline: none;
+  width: 180px;
+  caret-color: #00cc00;
+  text-transform: uppercase;
+}
+
+.cursor-blink {
+  display: inline-block;
+  width: 13px;
+  height: 24px;
+  background: #00cc00;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+@keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+
+.status-bar {
+  border-top: 1px solid #1a2a1a;
+  padding: 16px 30px;
+}
+
+.status-bar pre {
+  font-size: 22px;
+  line-height: 1.5;
+}
+
+/* Right panel */
+.status-display {
+  flex: 0.32;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.status-title {
+  font-size: 15px;
+  color: #555;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.status-text {
+  font-size: 30px;
+  letter-spacing: 2px;
+  transition: color 0.3s;
+}
+.status-text.safe { color: #00cc00; text-shadow: 0 0 12px rgba(0,204,0,0.4); }
+.status-text.danger { color: #ff0000; text-shadow: 0 0 25px rgba(255,0,0,0.7); }
+
+.status-sub {
+  font-size: 15px;
+  color: #555;
+  margin-top: 8px;
+}
+
+.turntable-status {
+  font-size: 14px;
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+.turntable-status.moving { color: #ccaa00; }
+.turntable-status.ready { color: #00cc00; }
+
+.flag-display {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #2a3a2a;
+  letter-spacing: 0.5px;
+}
+
+/* Machine */
+.machine-display {
+  flex: 0.68;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.machine-svg { width: 100%; height: 100%; }
+
+.beam-cone { opacity: 0; transition: opacity 0.3s; }
+.beam-cone.active { opacity: 1; }
+
+.overdose-flash {
+  position: absolute; inset: 0;
+  background: rgba(255,0,0,0.3);
+  opacity: 0; z-index: 4; pointer-events: none;
+}
+.overdose-flash.active { animation: flash 0.3s ease infinite; }
+@keyframes flash { 0%,100%{opacity:0} 50%{opacity:0.6} }
+
+/* Help */
+.help-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #000;
+  border-top: 1px solid #222;
+  padding: 5px 20px;
+  font-size: 14px;
+  color: #444;
+  display: flex; gap: 20px; z-index: 20;
+  font-family: 'VT323', monospace;
+  letter-spacing: 0.5px;
+}
+.help-bar b { color: #00cc00; font-weight: normal; }
+
+/* Malfunction */
+.malfunction {
+  display: none;
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #0a0000;
+  border: 2px solid #ff0000;
+  padding: 28px 48px;
+  z-index: 20; text-align: center; color: #ff0000;
+  box-shadow: 0 0 80px rgba(255,0,0,0.25);
+  border-radius: 6px;
+}
+.malfunction.show { display: block; }
+.malfunction .title { font-size: 22px; letter-spacing: 4px; }
+.malfunction .code { font-size: 42px; margin: 12px 0; letter-spacing: 5px; }
+.malfunction .dismiss { font-size: 14px; color: #550000; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<div class="left-panel">
+  <div class="scanlines"></div>
+
+  <div class="terminal-body">
+    <div class="section">
+      <pre> PATIENT NAME: <input type="text" class="term-input" id="patient-name" value="John" maxlength="16" placeholder="Enter name"></pre>
+      <pre> TREATMENT MODE: FIX       BEAM TYPE: <span id="beam-type-display">E</span></pre>
+      <pre>                           ENERGY (KeV):     <span id="energy-display">10</span></pre>
+    </div>
+
+    <div class="section">
+      <pre>                          ACTUAL       PRESCRIBED</pre>
+      <pre>      UNIT RATE/MINUTE    0.000000       0.000000</pre>
+      <pre>      MONITOR UNITS     <span id="monitor-actual">200.000000</span>     200.000000</pre>
+      <pre>      TIME (MIN)          0.270000       0.270000</pre>
+    </div>
+
+    <div class="section">
+      <pre> GANTRY ROTATION (DEG)     0.000000     0.000000   VERIFIED</pre>
+      <pre> COLLIMATOR ROT. (DEG)   359.200000   359.200000   VERIFIED</pre>
+      <pre> COLLIMATOR X (CM)        14.200000    14.200000   VERIFIED</pre>
+      <pre> COLLIMATOR Y (CM)        27.200000    27.200000   VERIFIED</pre>
+      <pre> WEDGE NUMBER               1.000000     1.000000   VERIFIED</pre>
+      <pre> ACCESSORY NUMBER           0.000000     0.000000   VERIFIED</pre>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <pre> <span id="date-display">DATE: 2026-04-01</span>   SYSTEM: <span id="system-status">BEAM READY</span>    OP.MODE: TREAT    <span id="mode-indicator">AUTO</span></pre>
+    <pre> <span id="time-display">TIME: 00:00:00</span>     TREAT: <span id="treat-status">TREAT PAUSE</span>                    <span id="xray-indicator">E-BEAM</span></pre>
+    <pre> OPR ID: 042-sim    REASON: OPERATOR     COMMAND: <input type="text" class="cmd-input" id="cmd-input" autofocus maxlength="10"><span class="cursor-blink" id="cursor"></span></pre>
+  </div>
+
+  <div class="malfunction" id="malfunction">
+    <div class="title">MALFUNCTION</div>
+    <div class="code">54</div>
+    <div class="dismiss">Press ENTER to proceed</div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="status-display">
+    <div class="scanlines"></div>
+    <div class="status-title">PATIENT DOSE STATUS</div>
+    <div class="status-text safe" id="dose-status">BEAM READY</div>
+    <div class="status-sub" id="dose-detail">Awaiting command</div>
+    <div class="turntable-status ready" id="turntable-status">TURNTABLE: READY</div>
+    <div class="flag-display" id="flag-display">safety_flag = 0</div>
+  </div>
+
+  <div class="machine-display">
+    <div class="scanlines" style="z-index:5;"></div>
+    <div class="overdose-flash" id="overdose-flash"></div>
+    <svg class="machine-svg" viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cyl" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1565a8"/><stop offset="35%" stop-color="#42a0f0"/><stop offset="65%" stop-color="#5ab8ff"/><stop offset="100%" stop-color="#1565a8"/>
+        </linearGradient>
+        <linearGradient id="cyl-top" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#3090d8"/><stop offset="50%" stop-color="#6ec4ff"/><stop offset="100%" stop-color="#3090d8"/>
+        </linearGradient>
+        <linearGradient id="noz" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1050a0"/><stop offset="50%" stop-color="#3888dd"/><stop offset="100%" stop-color="#1050a0"/>
+        </linearGradient>
+        <linearGradient id="noz-small" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#2070bb"/><stop offset="50%" stop-color="#50a0ee"/><stop offset="100%" stop-color="#2070bb"/>
+        </linearGradient>
+        <linearGradient id="armg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a2a6a"/><stop offset="50%" stop-color="#2a68bb"/><stop offset="100%" stop-color="#0a2a6a"/>
+        </linearGradient>
+        <linearGradient id="flt" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ee3333"/><stop offset="50%" stop-color="#cc1111"/><stop offset="100%" stop-color="#880808"/>
+        </linearGradient>
+        <linearGradient id="joint" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a50a0"/><stop offset="50%" stop-color="#3080dd"/><stop offset="100%" stop-color="#1a50a0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Beam source cylinder -->
+      <rect x="160" y="28" width="80" height="70" rx="3" fill="url(#cyl)"/>
+      <ellipse cx="200" cy="28" rx="40" ry="12" fill="url(#cyl-top)"/>
+      <ellipse cx="200" cy="98" rx="40" ry="8" fill="#1050a0"/>
+
+      <!-- Nozzle -->
+      <rect x="180" y="96" width="40" height="32" rx="2" fill="url(#noz)"/>
+      <rect x="188" y="128" width="24" height="14" rx="2" fill="url(#noz-small)"/>
+
+      <!-- Beam exit aperture -->
+      <circle cx="200" cy="148" r="4" fill="#0a2a5a" stroke="#4090dd" stroke-width="1.5"/>
+
+      <!--
+        Turntable arm + filter.
+        Pivot at (300, 210). Arm extends to filter.
+        X-ray mode (rotate 0deg): filter sits at x=200, y=190 — directly under beam.
+        Electron mode (rotate 80deg): arm swings clockwise, filter goes off to the right.
+      -->
+      <g id="turntable-arm" style="transform-origin: 300px 210px; transition: transform 3s ease; transform: rotate(80deg);">
+        <!-- Arm from pivot to filter position -->
+        <line x1="300" y1="210" x2="214" y2="200" stroke="url(#armg)" stroke-width="9" stroke-linecap="round"/>
+        <!-- Small joint at filter end -->
+        <circle cx="214" cy="200" r="6" fill="url(#joint)"/>
+        <!-- Filter/target block — centered at x=200 under the beam when rotate(0) -->
+        <rect x="188" y="170" width="30" height="50" rx="3" fill="url(#flt)" id="filter-block"/>
+      </g>
+
+      <!-- Pivot joint (always visible) -->
+      <circle cx="300" cy="210" r="9" fill="url(#joint)" stroke="#1a4080" stroke-width="1.5"/>
+
+      <!-- Spreader plate -->
+      <rect x="155" y="290" width="90" height="8" rx="2" fill="#bbb" stroke="#999" stroke-width="0.5"/>
+
+      <!-- Patient bed -->
+      <rect x="140" y="350" width="120" height="12" rx="5" fill="#444"/>
+      <rect x="155" y="342" width="90" height="10" rx="3" fill="#383838"/>
+
+      <!-- Beam: Electron (green, full path nozzle → patient, no filter) -->
+      <polygon id="beam-electron" class="beam-cone" points="200,148 168,342 232,342" fill="rgba(0,220,0,0.15)" stroke="rgba(0,220,0,0.35)" stroke-width="1"/>
+
+      <!-- Beam: X-ray safe (orange, starts below filter at y=225) -->
+      <polygon id="beam-xray-safe" class="beam-cone" points="200,225 168,342 232,342" fill="rgba(255,165,0,0.2)" stroke="rgba(255,165,0,0.45)" stroke-width="1"/>
+
+      <!-- Beam: OVERDOSE (intense red, full power, no filter) -->
+      <polygon id="beam-overdose" class="beam-cone" points="200,148 150,342 250,342" fill="rgba(255,0,0,0.25)" stroke="rgba(255,0,0,0.55)" stroke-width="1.5"/>
+
+      <text x="200" y="400" text-anchor="middle" fill="#00cc00" font-family="VT323, monospace" font-size="18" id="machine-mode-label">Electron Mode</text>
+    </svg>
+  </div>
+</div>
+
+<div class="help-bar">
+  <div>Commands: <b>E</b> = Electron  <b>X</b> = X-ray  <b>FIRE</b> = Fire beam  <b>RESET</b> = Reset</div>
+  <div style="margin-left:auto;">Try switching modes fast then firing</div>
+</div>
+
+<script>
+let beamType = 'E', beamEnergy = 10, safetyFlag = 0;
+let turntablePosition = 'electron', turntableTimer = null;
+let isFiring = false, isOverdose = false;
+const $ = id => document.getElementById(id);
+const cmdInput = $('cmd-input');
+
+function updateClock() {
+  const now = new Date();
+  $('time-display').textContent = 'TIME: ' + now.toTimeString().split(' ')[0];
+  $('date-display').textContent = 'DATE: ' + now.toISOString().split('T')[0];
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function setBeamType(type) {
+  beamType = type;
+  $('beam-type-display').textContent = type;
+  if (type === 'X') {
+    beamEnergy = 25000; $('energy-display').textContent = '25000';
+    $('xray-indicator').textContent = 'X-RAY'; $('machine-mode-label').textContent = 'X-Ray Mode';
+  } else {
+    beamEnergy = 10; $('energy-display').textContent = '10';
+    $('xray-indicator').textContent = 'E-BEAM'; $('machine-mode-label').textContent = 'Electron Mode';
+  }
+  safetyFlag++;
+  $('flag-display').textContent = 'safety_flag = ' + safetyFlag;
+  if (type === 'X' && turntablePosition !== 'xray') startTurntableMove('xray');
+  else if (type === 'E' && turntablePosition !== 'electron') startTurntableMove('electron');
+  updateDisplay();
+}
+
+function startTurntableMove(target) {
+  if (turntableTimer) clearTimeout(turntableTimer);
+  turntablePosition = 'moving';
+  $('turntable-status').textContent = 'TURNTABLE: MOVING...';
+  $('turntable-status').className = 'turntable-status moving';
+  $('system-status').textContent = 'TT MOVING';
+  $('turntable-arm').style.transform = target === 'xray' ? 'rotate(0deg)' : 'rotate(80deg)';
+  turntableTimer = setTimeout(() => {
+    turntablePosition = target;
+    $('turntable-status').textContent = 'TURNTABLE: ' + target.toUpperCase();
+    $('turntable-status').className = 'turntable-status ready';
+    $('system-status').textContent = 'BEAM READY';
+    updateDisplay();
+  }, 3000);
+}
+
+function fireBeam() {
+  if (isFiring) return;
+  const safetyCheck = (safetyFlag == 1);
+  if (safetyCheck && turntablePosition === 'moving') { $('treat-status').textContent = 'WAITING TT'; return; }
+  isFiring = true;
+  $('treat-status').textContent = 'BEAM ON';
+  if (beamType === 'X' && turntablePosition !== 'xray') triggerOverdose();
+  else if (beamType === 'E') triggerSafeBeam('electron');
+  else triggerSafeBeam('xray');
+}
+
+function triggerSafeBeam(type) {
+  $('dose-status').textContent = 'SAFE DOSE';
+  $('dose-status').className = 'status-text safe';
+  $('dose-detail').textContent = type === 'electron' ? '200 rads delivered correctly' : '200 rads (filtered X-ray)';
+  $('dose-detail').style.color = '#555';
+  $(type === 'electron' ? 'beam-electron' : 'beam-xray-safe').classList.add('active');
+  $('monitor-actual').textContent = '200.000000';
+  setTimeout(() => {
+    $('beam-electron').classList.remove('active');
+    $('beam-xray-safe').classList.remove('active');
+    $('treat-status').textContent = 'TREAT PAUSE';
+    isFiring = false;
+  }, 2000);
+}
+
+function triggerOverdose() {
+  isOverdose = true;
+  $('dose-status').textContent = 'OVERDOSE';
+  $('dose-status').className = 'status-text danger';
+  $('dose-detail').textContent = '25,000 rads — 100x intended dose';
+  $('dose-detail').style.color = '#ff0000';
+  $('beam-overdose').classList.add('active');
+  $('overdose-flash').classList.add('active');
+  $('monitor-actual').textContent = '25000.000000';
+  setTimeout(() => {
+    $('malfunction').classList.add('show');
+    $('system-status').textContent = 'MALFUNCTION';
+    $('treat-status').textContent = 'FAULT';
+  }, 800);
+}
+
+function resetMachine() {
+  isFiring = false; isOverdose = false; safetyFlag = 0;
+  beamType = 'E'; beamEnergy = 10; turntablePosition = 'electron';
+  if (turntableTimer) clearTimeout(turntableTimer);
+  $('beam-type-display').textContent = 'E'; $('energy-display').textContent = '10';
+  $('xray-indicator').textContent = 'E-BEAM'; $('system-status').textContent = 'BEAM READY';
+  $('treat-status').textContent = 'TREAT PAUSE'; $('monitor-actual').textContent = '200.000000';
+  $('machine-mode-label').textContent = 'Electron Mode';
+  $('dose-status').textContent = 'BEAM READY'; $('dose-status').className = 'status-text safe';
+  $('dose-detail').textContent = 'Awaiting command'; $('dose-detail').style.color = '#555';
+  $('turntable-status').textContent = 'TURNTABLE: READY'; $('turntable-status').className = 'turntable-status ready';
+  $('flag-display').textContent = 'safety_flag = 0';
+  $('turntable-arm').style.transform = 'rotate(80deg)'; // electron: filter swung away out of view
+  $('beam-electron').classList.remove('active'); $('beam-xray-safe').classList.remove('active');
+  $('beam-overdose').classList.remove('active'); $('overdose-flash').classList.remove('active');
+  $('malfunction').classList.remove('show');
+}
+
+function updateDisplay() {
+  if (!isFiring && !isOverdose) {
+    $('dose-status').textContent = 'BEAM READY'; $('dose-status').className = 'status-text safe';
+    $('dose-detail').textContent = beamType === 'X' ? 'X-ray mode selected' : 'Electron mode selected';
+    $('dose-detail').style.color = '#555';
+  }
+}
+
+cmdInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const cmd = this.value.trim().toUpperCase(); this.value = '';
+    if (isOverdose && $('malfunction').classList.contains('show')) { $('malfunction').classList.remove('show'); return; }
+    if (cmd === 'E') setBeamType('E');
+    else if (cmd === 'X') setBeamType('X');
+    else if (cmd === 'FIRE') fireBeam();
+    else if (cmd === 'RESET') resetMachine();
+  }
+});
+document.addEventListener('click', e => { if (e.target.id !== 'patient-name') cmdInput.focus(); });
+cmdInput.addEventListener('focus', () => $('cursor').style.display = 'none');
+cmdInput.addEventListener('blur', () => $('cursor').style.display = 'inline-block');
+cmdInput.focus();
+</script>
+</body>
+</html>
