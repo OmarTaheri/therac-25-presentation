@@ -383,155 +383,150 @@
 <section data-background-color="#000" data-background-iframe="therac-25/index.html" data-background-interactive>
 </section>
 
-<!-- Slide 21 - Code example (interactive) -->
+<!-- Slide 21 - Code example (interactive, fragment-based) -->
 <section data-background-color="#000">
   <style>
-    .rc-wrap{display:flex;gap:24px;max-width:1100px;margin:0 auto;font-family:'JetBrains Mono','Fira Code',monospace;font-size:13px;}
-    .rc-vars{flex:0 0 260px;background:#0d1117;border:1px solid #333;border-radius:8px;padding:16px;}
-    .rc-vars h3{font-family:'League Spartan',sans-serif;font-size:16px;color:#fff;margin:0 0 14px;}
-    .rc-var{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin:4px 0;border-radius:6px;background:#161b22;border:1px solid #222;}
-    .rc-var-name{color:#aaa;font-size:12px;}
-    .rc-var-val{font-weight:700;font-size:14px;transition:all 0.3s;}
-    .rc-turntable{display:flex;align-items:center;gap:8px;margin-top:14px;padding:10px;background:#161b22;border:1px solid #222;border-radius:6px;}
-    .rc-turntable-icon{width:40px;height:40px;border-radius:50%;border:3px solid #444;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.4s;}
-    .rc-code{flex:1;background:#0d1117;border:1px solid #333;border-radius:8px;padding:16px;overflow-y:auto;max-height:70vh;}
-    .rc-code h3{font-family:'League Spartan',sans-serif;font-size:16px;color:#fff;margin:0 0 14px;}
-    .rc-line{padding:4px 10px;border-radius:4px;line-height:1.8;white-space:pre;transition:all 0.3s;color:#8b949e;}
-    .rc-line.active{background:#1a3a1a;color:#fff;border-left:3px solid #639922;}
-    .rc-line.danger{background:#3a1a1a;color:#fff;border-left:3px solid #E24B4A;}
-    .rc-line.skip{background:#3a2a1a;color:#fff;border-left:3px solid #E8943A;}
-    .rc-narrator{min-height:48px;margin-top:12px;padding:10px 14px;background:#161b22;border:1px solid #333;border-radius:6px;font-family:'League Spartan',sans-serif;font-size:14px;color:#ccc;line-height:1.5;}
-    .rc-btn{display:inline-block;padding:8px 24px;margin-top:12px;border:none;border-radius:6px;font-family:'League Spartan',sans-serif;font-size:14px;font-weight:600;cursor:pointer;background:#378ADD;color:#fff;transition:all 0.2s;}
-    .rc-btn:hover{background:#2a6fb5;}
-    .rc-btn.reset{background:#333;margin-left:8px;}
-    .rc-btn.reset:hover{background:#555;}
+    .rc-layout{display:flex;gap:20px;max-width:1100px;margin:0 auto;align-items:flex-start;}
+    .rc-left{flex:0 0 220px;}
+    .rc-right{flex:1;min-width:0;}
+    .rc-panel{background:#0d1117;border:1px solid #262626;border-radius:10px;padding:14px 16px;}
+    .rc-heading{font-family:'League Spartan',sans-serif;font-size:15px;font-weight:600;color:#fff;margin:0 0 12px;}
+    .rc-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1a1a1a;}
+    .rc-row:last-child{border-bottom:none;}
+    .rc-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;color:#666;}
+    .rc-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;transition:all 0.3s;}
+    .rc-msg{margin-top:10px;padding:8px 12px;border-radius:6px;font-family:'League Spartan',sans-serif;font-size:13px;line-height:1.5;color:#888;background:#161b22;border:1px solid #262626;min-height:36px;}
+    .cl{font-family:'JetBrains Mono',monospace;font-size:13px;padding:3px 8px;line-height:2;border-radius:4px;color:#555;white-space:pre;transition:all 0.25s;}
+    .cl.on{color:#c9d1d9;background:#111a11;border-left:3px solid #639922;}
+    .cl.bad{color:#fff;background:#1a1111;border-left:3px solid #E24B4A;}
+    .cl.warn{color:#fff;background:#1a1711;border-left:3px solid #E8943A;}
+    .cl.done{color:#c9d1d9;}
   </style>
 
   <div style="text-align:left;max-width:1100px;margin:0 auto;">
-    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:12px;">How it happened in code</p>
-    <div class="rc-wrap">
-      <!-- Left: Variables -->
-      <div class="rc-vars">
-        <h3>Shared State</h3>
-        <div class="rc-var">
-          <span class="rc-var-name">beam_energy</span>
-          <span class="rc-var-val" id="rc-beam" style="color:#378ADD;">LOW</span>
-        </div>
-        <div class="rc-var">
-          <span class="rc-var-name">safety_flag</span>
-          <span class="rc-var-val" id="rc-flag" style="color:#378ADD;">0</span>
-        </div>
-        <div class="rc-var">
-          <span class="rc-var-name">filter_in_place</span>
-          <span class="rc-var-val" id="rc-filter" style="color:#E24B4A;">NO</span>
-        </div>
-        <div class="rc-turntable">
-          <div class="rc-turntable-icon" id="rc-turntable-icon">&#9881;</div>
-          <div>
-            <div style="color:#aaa;font-size:11px;">Turntable</div>
-            <div style="color:#fff;font-size:13px;font-weight:600;" id="rc-turntable-status">Idle</div>
+    <p style="font-family:'League Spartan',sans-serif;font-size:20px;font-weight:600;color:#fff;margin:0 0 14px;">How it happened in code</p>
+
+    <div class="rc-layout">
+      <!-- Left: shared state -->
+      <div class="rc-left">
+        <div class="rc-panel">
+          <div class="rc-heading">Shared State</div>
+          <div class="rc-row"><span class="rc-lbl">beam_energy</span><span class="rc-val" id="rv-beam" style="color:#378ADD;">LOW</span></div>
+          <div class="rc-row"><span class="rc-lbl">safety_flag</span><span class="rc-val" id="rv-flag" style="color:#378ADD;">0</span></div>
+          <div class="rc-row"><span class="rc-lbl">filter</span><span class="rc-val" id="rv-filter" style="color:#E24B4A;">NO</span></div>
+          <div class="rc-row"><span class="rc-lbl">turntable</span><span class="rc-val" id="rv-turntable" style="color:#666;">Idle</span></div>
+          <div class="rc-row" style="border-top:1px solid #333;margin-top:6px;padding-top:8px;">
+            <span class="rc-lbl">patient</span><span class="rc-val" id="rv-patient" style="color:#639922;">Safe</span>
           </div>
         </div>
-        <div class="rc-var" style="margin-top:14px;border-color:#E24B4A33;">
-          <span class="rc-var-name">patient</span>
-          <span class="rc-var-val" id="rc-patient" style="color:#639922;">Safe</span>
+        <div class="rc-msg" id="rv-msg">Click <b>Next</b> to step through the code.</div>
+        <div style="margin-top:10px;display:flex;gap:8px;">
+          <button id="rc-next-btn" onclick="rcNext(event)" style="flex:1;padding:8px 0;border:none;border-radius:6px;font-family:'League Spartan',sans-serif;font-size:14px;font-weight:600;cursor:pointer;background:#378ADD;color:#fff;">Next</button>
+          <button onclick="rcReset(event)" style="padding:8px 14px;border:none;border-radius:6px;font-family:'League Spartan',sans-serif;font-size:13px;cursor:pointer;background:#333;color:#aaa;">Reset</button>
         </div>
       </div>
 
-      <!-- Right: Code -->
-      <div class="rc-code">
-        <h3>Pseudocode <span style="font-size:12px;color:#555;font-weight:400;">— click Next Step</span></h3>
-        <div class="rc-line" id="rcL0"><span style="color:#639922;">// Initialize machine</span></div>
-        <div class="rc-line" id="rcL1">beam_energy = <span style="color:#378ADD;">LOW</span></div>
-        <div class="rc-line" id="rcL2">safety_flag = <span style="color:#378ADD;">0</span></div>
-        <div class="rc-line" id="rcL3">filter_in_place = <span style="color:#E24B4A;">NO</span></div>
-        <div class="rc-line" id="rcL4">&nbsp;</div>
-        <div class="rc-line" id="rcL5"><span style="color:#639922;">// Operator selects X-ray mode</span></div>
-        <div class="rc-line" id="rcL6">beam_energy = <span style="color:#E8943A;">HIGH</span></div>
-        <div class="rc-line" id="rcL7">start_moving_turntable()  <span style="color:#555;">// 8 sec...</span></div>
-        <div class="rc-line" id="rcL8">safety_flag++             <span style="color:#555;">// flag = 1</span></div>
-        <div class="rc-line" id="rcL9">&nbsp;</div>
-        <div class="rc-line" id="rcL10"><span style="color:#639922;">// Operator switches E → X quickly</span></div>
-        <div class="rc-line" id="rcL11">safety_flag++             <span style="color:#555;">// flag = ?</span></div>
-        <div class="rc-line" id="rcL12">&nbsp;</div>
-        <div class="rc-line" id="rcL13"><span style="color:#639922;">// Safety check before firing</span></div>
-        <div class="rc-line" id="rcL14"><span style="color:#E24B4A;">if</span> (safety_flag <span style="color:#E24B4A;">==</span> 1) {</div>
-        <div class="rc-line" id="rcL15">  wait_for_turntable()</div>
-        <div class="rc-line" id="rcL16">}</div>
-        <div class="rc-line" id="rcL17">&nbsp;</div>
-        <div class="rc-line" id="rcL18"><span style="color:#E24B4A;font-weight:700;">fire_beam()</span></div>
-        <div class="rc-line" id="rcL19">&nbsp;</div>
-        <div class="rc-line" id="rcL20"><span style="color:#639922;">// The fix: one character</span></div>
-        <div class="rc-line" id="rcL21"><span style="color:#639922;">if</span> (safety_flag <span style="color:#639922;">>=</span> 1) { ... }</div>
+      <!-- Right: code lines -->
+      <div class="rc-right">
+        <div class="rc-panel" style="padding:12px 14px;">
+          <div class="cl" id="cL0" data-rc="0"><span style="color:#639922;">// Initialize machine</span></div>
+          <div class="cl" id="cL1" data-rc="1">beam_energy = LOW</div>
+          <div class="cl" id="cL2" data-rc="2">safety_flag = 0</div>
+          <div class="cl" id="cL3" data-rc="3">filter_in_place = NO</div>
+          <div class="cl" id="cL4" style="height:8px;"></div>
+          <div class="cl" id="cL5" data-rc="4"><span style="color:#639922;">// Operator selects X-ray mode</span></div>
+          <div class="cl" id="cL6" data-rc="5">beam_energy = <span style="color:#E8943A;">HIGH</span></div>
+          <div class="cl" id="cL7" data-rc="6">start_moving_turntable()  <span style="color:#555;">// 8 sec</span></div>
+          <div class="cl" id="cL8" data-rc="7">safety_flag++</div>
+          <div class="cl" id="cL9" style="height:8px;"></div>
+          <div class="cl" id="cL10" data-rc="8"><span style="color:#E8943A;">// Operator switches X → E → X (fast!)</span></div>
+          <div class="cl" id="cL11" data-rc="9">safety_flag++</div>
+          <div class="cl" id="cL12" style="height:8px;"></div>
+          <div class="cl" id="cL13" data-rc="10"><span style="color:#639922;">// Safety check before firing</span></div>
+          <div class="cl" id="cL14" data-rc="11">if (safety_flag <span style="color:#E24B4A;">==</span> 1) {</div>
+          <div class="cl" id="cL15" data-rc="12">  wait_for_turntable()</div>
+          <div class="cl" id="cL16" data-rc="12">}</div>
+          <div class="cl" id="cL17" style="height:8px;"></div>
+          <div class="cl" id="cL18" data-rc="13">fire_beam()</div>
+        </div>
       </div>
-    </div>
-
-    <div class="rc-narrator" id="rc-narrator">Press <b>Next Step</b> to walk through the code line by line.</div>
-    <div style="margin-top:6px;">
-      <button class="rc-btn" id="rc-next-btn" onclick="rcStep()">Next Step</button>
-      <button class="rc-btn reset" onclick="rcReset()">Reset</button>
     </div>
   </div>
 
   <script>
   (function(){
-    var step = -1;
-    var vars = {beam:'LOW',flag:0,filter:'NO',turntable:'Idle',patient:'Safe'};
-
-    function u(){
-      var b=document.getElementById('rc-beam');
-      var f=document.getElementById('rc-flag');
-      var fi=document.getElementById('rc-filter');
-      var t=document.getElementById('rc-turntable-status');
-      var ti=document.getElementById('rc-turntable-icon');
-      var p=document.getElementById('rc-patient');
-      b.textContent=vars.beam;
-      b.style.color=vars.beam==='HIGH'?'#E8943A':'#378ADD';
-      f.textContent=vars.flag;
-      f.style.color=vars.flag===0?'#378ADD':vars.flag===1?'#639922':'#E24B4A';
-      fi.textContent=vars.filter;
-      fi.style.color=vars.filter==='YES'?'#639922':'#E24B4A';
-      t.textContent=vars.turntable;
-      ti.style.borderColor=vars.turntable==='Moving...'?'#E8943A':vars.turntable==='Interrupted!'?'#E24B4A':'#444';
-      ti.style.transform=vars.turntable==='Moving...'?'rotate(45deg)':'rotate(0deg)';
-      p.textContent=vars.patient;
-      p.style.color=vars.patient==='Safe'?'#639922':vars.patient==='DANGER'?'#E8943A':'#E24B4A';
-    }
-
-    function clearLines(){for(var i=0;i<=21;i++){var l=document.getElementById('rcL'+i);if(l)l.className='rc-line';}}
-
-    function hl(id,cls){var l=document.getElementById('rcL'+id);if(l)l.className='rc-line '+(cls||'active');}
-
-    var steps=[
-      function(){clearLines();hl(0);hl(1);hl(2);hl(3);vars={beam:'LOW',flag:0,filter:'NO',turntable:'Idle',patient:'Safe'};u();return 'Machine initializes. Beam is LOW, safety flag is 0, filter is not in place.';},
-      function(){clearLines();hl(5);return 'Operator sits down and selects <b>X-ray mode</b>...';},
-      function(){clearLines();hl(6);vars.beam='HIGH';u();return 'Software sets beam energy to <b style="color:#E8943A;">HIGH</b>. This is X-ray power level.';},
-      function(){clearLines();hl(7);vars.turntable='Moving...';u();return 'Turntable starts rotating to move the filter into place. This takes <b>8 seconds</b>...';},
-      function(){clearLines();hl(8);vars.flag=1;u();return 'Setup task increments safety_flag to <b style="color:#639922;">1</b>. The check task should catch this.';},
-      function(){clearLines();hl(10);return 'But the operator made a typo! They quickly switch to <b>E</b> mode, then back to <b>X</b> — all within 8 seconds.';},
-      function(){clearLines();hl(11,'danger');vars.flag=2;vars.turntable='Interrupted!';u();return 'Setup task runs <b>again</b> and increments flag: 1 + 1 = <b style="color:#E24B4A;">2</b>. Turntable was interrupted — filter is <b>still NOT in place</b>!';},
-      function(){clearLines();hl(13);return 'Now the check task runs the safety check before firing...';},
-      function(){clearLines();hl(14,'skip');vars.patient='DANGER';u();return '<b style="color:#E8943A;">safety_flag == 1?</b> → flag is <b>2</b>, not 1. Condition is <b style="color:#E24B4A;">FALSE</b>. Safety check is <b>SKIPPED</b>.';},
-      function(){clearLines();hl(15,'skip');hl(16,'skip');return '<b>wait_for_turntable()</b> is never called. Nobody verifies the filter is in place.';},
-      function(){clearLines();hl(18,'danger');vars.patient='DEAD';u();return '<b style="color:#E24B4A;">BEAM FIRES.</b> High energy X-ray. No filter. Patient receives <b>25,000 rads</b> instead of 200. Lethal dose.';},
-      function(){clearLines();hl(20);hl(21,'active');return 'The fix: <b style="color:#639922;">>=</b> instead of <b style="color:#E24B4A;">==</b>. One character. Would have caught flag = 2, 3, anything. Three lives lost.';},
+    var rcSteps = [
+      {lines:[0],cls:'on',vars:{},msg:'Initializing the Therac-25 machine...'},
+      {lines:[1],cls:'on',vars:{beam:['LOW','#378ADD']},msg:'Beam energy starts at LOW (electron mode).'},
+      {lines:[2],cls:'on',vars:{flag:['0','#378ADD']},msg:'Safety flag starts at 0 — no setup in progress.'},
+      {lines:[3],cls:'on',vars:{filter:['NO','#E24B4A']},msg:'Filter is not in the beam path yet.'},
+      {lines:[5],cls:'on',vars:{},msg:'Operator selects X-ray mode...'},
+      {lines:[6],cls:'on',vars:{beam:['HIGH','#E8943A']},msg:'Beam energy set to HIGH — this is X-ray power.'},
+      {lines:[7],cls:'on',vars:{turntable:['Moving...','#E8943A']},msg:'Turntable starts moving the filter into place. Takes 8 seconds...'},
+      {lines:[8],cls:'on',vars:{flag:['1','#639922']},msg:'Setup task done → safety_flag incremented to 1.'},
+      {lines:[10],cls:'warn',vars:{},msg:'Operator notices a typo, quickly switches E → X within 8 seconds!'},
+      {lines:[11],cls:'bad',vars:{flag:['2','#E24B4A'],turntable:['Interrupted!','#E24B4A']},msg:'Setup runs AGAIN → flag is now 2. Turntable was interrupted, filter still NOT in place!'},
+      {lines:[13],cls:'on',vars:{},msg:'Check task runs the safety check before firing the beam...'},
+      {lines:[14],cls:'warn',vars:{patient:['DANGER','#E8943A']},msg:'safety_flag == 1? → flag is 2, not 1. Condition is FALSE!'},
+      {lines:[15,16],cls:'warn',vars:{},msg:'wait_for_turntable() is SKIPPED. Nobody checks if the filter is in place.'},
+      {lines:[18],cls:'bad',vars:{patient:['DEAD','#E24B4A']},msg:'BEAM FIRES. High energy, no filter. 25,000 rads. Patient killed.'},
     ];
 
-    window.rcStep=function(){
-      step++;
-      if(step>=steps.length){step=steps.length-1;return;}
-      var msg=steps[step]();
-      document.getElementById('rc-narrator').innerHTML=msg;
-      if(step>=steps.length-1){document.getElementById('rc-next-btn').textContent='Done';document.getElementById('rc-next-btn').style.background='#333';}
+    var rcIdx = -1;
+
+    function clearAll(){
+      for(var i=0;i<=21;i++){var e=document.getElementById('cL'+i);if(e)e.className='cl';}
+    }
+
+    function resetVars(){
+      var d={beam:['LOW','#378ADD'],flag:['0','#378ADD'],filter:['NO','#E24B4A'],turntable:['Idle','#666'],patient:['Safe','#639922']};
+      var keys=Object.keys(d);
+      for(var i=0;i<keys.length;i++){var el=document.getElementById('rv-'+keys[i]);if(el){el.textContent=d[keys[i]][0];el.style.color=d[keys[i]][1];}}
+    }
+
+    function applyStep(idx){
+      clearAll();
+      // Mark all previous lines as done
+      for(var p=0;p<=idx;p++){
+        var s=rcSteps[p];
+        for(var j=0;j<s.lines.length;j++){
+          var e=document.getElementById('cL'+s.lines[j]);
+          if(e) e.className='cl done';
+        }
+      }
+      // Highlight current
+      var cur=rcSteps[idx];
+      for(var j=0;j<cur.lines.length;j++){
+        var e=document.getElementById('cL'+cur.lines[j]);
+        if(e) e.className='cl '+cur.cls;
+      }
+      // Update vars
+      var keys=Object.keys(cur.vars);
+      for(var j=0;j<keys.length;j++){
+        var el=document.getElementById('rv-'+keys[j]);
+        if(el){el.textContent=cur.vars[keys[j]][0];el.style.color=cur.vars[keys[j]][1];}
+      }
+      document.getElementById('rv-msg').innerHTML=cur.msg;
+    }
+
+    window.rcNext = function(e){
+      e.stopPropagation();
+      if(rcIdx >= rcSteps.length - 1) return;
+      rcIdx++;
+      applyStep(rcIdx);
+      if(rcIdx >= rcSteps.length - 1){
+        document.getElementById('rc-next-btn').textContent='Done';
+        document.getElementById('rc-next-btn').style.background='#333';
+      }
     };
 
-    window.rcReset=function(){
-      step=-1;
-      clearLines();
-      vars={beam:'LOW',flag:0,filter:'NO',turntable:'Idle',patient:'Safe'};
-      u();
-      document.getElementById('rc-narrator').innerHTML='Press <b>Next Step</b> to walk through the code line by line.';
-      document.getElementById('rc-next-btn').textContent='Next Step';
+    window.rcReset = function(e){
+      e.stopPropagation();
+      rcIdx = -1;
+      clearAll();
+      resetVars();
+      document.getElementById('rv-msg').innerHTML='Click <b>Next</b> to step through the code.';
+      document.getElementById('rc-next-btn').textContent='Next';
       document.getElementById('rc-next-btn').style.background='#378ADD';
     };
   })();
