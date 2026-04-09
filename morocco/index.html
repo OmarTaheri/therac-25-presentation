@@ -227,7 +227,48 @@
 .tree .node.red { border-color: var(--ma-red); background: var(--ma-red-soft); color:#fff; }
 .tree .node.green { border-color: var(--ma-green); background: var(--ma-green-soft); color:#fff; }
 .tree .link { width: 2px; height: 18px; background: var(--color-border-primary); }
-.tree .branches { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+.tree .branches { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.tree .avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px dashed var(--color-border-primary);
+  background: #0a0a12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ma-gold);
+  font-weight: 600;
+  margin: 0 auto 10px;
+  overflow: hidden;
+}
+.tree .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.tree .avatar.king {
+  width: 110px;
+  height: 110px;
+  border-style: solid;
+  border-color: var(--ma-gold);
+  background: rgba(212,175,55,0.08);
+}
+.tree .avatar.group {
+  width: 220px;
+  height: 96px;
+  border-radius: 14px;
+  border-style: solid;
+  border-color: var(--color-border-tertiary);
+}
+.tree .node .nm { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.25; }
+.tree .node .pct { font-size: 13px; color: var(--ma-gold); font-weight: 600; margin-top: 2px; }
+.tree .node.crown .nm { font-size: 16px; }
+.tree .node.group-node { min-width: 240px; }
 
 /* Pie-like slice visual for HACA */
 .haca-grid {
@@ -438,22 +479,35 @@
 <section data-background-color="#000">
   <div style="max-width:1100px; margin:0 auto; text-align:left;">
     <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:6px;">Who owns Al Mada?</p>
-    <p class="label">The royal family controls ~60% — through shell companies with names like <span style="color:var(--ma-gold);">SIGER</span> and <span style="color:var(--ma-gold);">ERGIS</span> (anagrams of <em>regis</em> — Latin for "king").</p>
+    <p class="label">Through shell companies with names like <span style="color:var(--ma-gold);">SIGER</span> and <span style="color:var(--ma-gold);">ERGIS</span> — both anagrams of <em>regis</em>, Latin for "king".</p>
 
-    <div class="tree" style="margin-top:20px;">
-      <div class="node crown">👑 King Mohammed VI &nbsp;·&nbsp; ~50.6%</div>
-      <div class="link"></div>
-      <div class="branches">
-        <div class="node">Prince Moulay Rachid<br><span style="color:var(--ma-gold);">~18.6%</span></div>
-        <div class="node">Princess Lalla Meryem<br><span style="color:var(--ma-gold);">~9–11%</span></div>
-        <div class="node">Princess Lalla Asma<br><span style="color:var(--ma-gold);">~9–11%</span></div>
-        <div class="node">Princess Lalla Hasna<br><span style="color:var(--ma-gold);">~9–11%</span></div>
+    <div class="tree" style="margin-top:18px;">
+      <div class="node crown">
+        <div class="avatar king"><img src="mohamed6.webp" alt="King Mohammed VI"></div>
+        <div class="nm">👑 King Mohammed VI</div>
+        <div class="pct">~50.6%</div>
       </div>
       <div class="link"></div>
-      <div class="node red" style="font-size:16px;">Royal family total ≈ 60% of Al Mada</div>
+      <div class="branches">
+        <div class="node">
+          <div class="avatar"><img src="molayrachid.webp" alt="Prince Moulay Rachid"></div>
+          <div class="nm">Prince Moulay Rachid</div>
+          <div class="pct">~18.6%</div>
+        </div>
+        <div class="node group-node">
+          <div class="avatar group"><img src="Princesses-Lalla-Meryem-Lalla-Asmae-et-Lalla-Hasnaa.webp" alt="Princesses Lalla Meryem, Lalla Asma, and Lalla Hasna"></div>
+          <div class="nm">Princesses Lalla Meryem · Lalla Asma · Lalla Hasna</div>
+          <div class="pct">~9–11% each</div>
+        </div>
+      </div>
+      <div class="link"></div>
+      <div class="node red" style="font-size:15px;">Royal family = virtually all of Al Mada</div>
     </div>
 
-    <p class="label" style="text-align:center; margin-top:18px; font-size:12px;">Source: Business Empires · Media Ownership Monitor</p>
+    <p class="label" style="text-align:center; margin-top:14px; font-size:11px; line-height:1.5;">
+      Individual percentages are stakes each family member holds in their <em>own</em> personal shell company (SIGER/ERGIS, Providence Holding, Unihold, Yano, Star Finance) — those shells in turn own Al Mada.<br>
+      Source: Business Empires · Media Ownership Monitor
+    </p>
   </div>
 </section>
 
