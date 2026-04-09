@@ -8,1114 +8,1170 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* Force landscape overlay for portrait mobile */
 #rotate-overlay {
-  display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-  background:#000; z-index:99999; flex-direction:column; align-items:center;
-  justify-content:center; font-family:'League Spartan',sans-serif; color:#fff;
-  text-align:center; padding:20px;
+  display:none;
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  background:#000;
+  z-index:99999;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-family:'League Spartan',sans-serif;
+  color:#fff;
+  text-align:center;
+  padding:20px;
 }
-#rotate-overlay .rotate-icon { font-size:80px; animation:rotatePhone 2s ease-in-out infinite; margin-bottom:20px; }
-@keyframes rotatePhone { 0%,100%{transform:rotate(0deg);} 50%{transform:rotate(90deg);} }
-#rotate-overlay p { font-size:22px; font-weight:600; margin:0; }
-#rotate-overlay span { font-size:14px; color:#aaa; margin-top:8px; display:block; }
-@media screen and (orientation:portrait) and (max-width:900px) { #rotate-overlay { display:flex; } }
-
+#rotate-overlay .rotate-icon {
+  font-size:80px;
+  animation:rotatePhone 2s ease-in-out infinite;
+  margin-bottom:20px;
+}
+@keyframes rotatePhone {
+  0%,100%{transform:rotate(0deg);}
+  50%{transform:rotate(90deg);}
+}
+#rotate-overlay p {
+  font-size:22px;
+  font-weight:600;
+  margin:0;
+}
+#rotate-overlay span {
+  font-size:14px;
+  color:#aaa;
+  margin-top:8px;
+  display:block;
+}
+@media screen and (orientation:portrait) and (max-width:900px) {
+  #rotate-overlay { display:flex; }
+}
+</style>
+<style>
 :root {
-  --mr: #C1272D;
-  --mg: #006233;
-  --gold: #B5A16B;
-  --tp: #fff;
-  --ts: #aaa;
-  --bg-card: #0d1117;
-  --border: #262626;
-  --border-light: #333;
-  --rad-lg: 12px;
-  --rad-md: 8px;
+  /* Moroccan palette */
+  --ma-red: #C1272D;
+  --ma-red-soft: rgba(193,39,45,0.15);
+  --ma-green: #006233;
+  --ma-green-soft: rgba(0,98,51,0.15);
+  --ma-gold: #D4AF37;
+
+  --color-text-primary: #fff;
+  --color-text-secondary: #aaa;
+  --color-background-secondary: #15151f;
+  --color-background-danger: rgba(193,39,45,0.12);
+  --color-background-success: rgba(0,98,51,0.18);
+  --color-border-tertiary: #2a2a2a;
+  --color-border-primary: #555;
+  --color-border-info: #D4AF37;
+  --border-radius-lg: 12px;
+  --border-radius-md: 8px;
+  --font-mono: 'Courier New', monospace;
 }
 
-.reveal, .reveal h1, .reveal h2, .reveal h3, .reveal p,
-.reveal li, .reveal span, .reveal div { font-family: 'League Spartan', sans-serif; }
+.reveal, .reveal h1, .reveal h2, .reveal h3, .reveal p, .reveal li, .reveal span, .reveal div {
+  font-family: 'League Spartan', sans-serif;
+}
 .reveal .slides section { background: #000; }
 .reveal { background: #000; }
 .reveal .slide-background { background: #000; }
 
-.slide-title { font-size: 78px; font-weight: 700; color: #fff; line-height: 1.1; }
-.slide-sub   { font-size: 34px; color: var(--ts); margin-top: 16px; font-weight: 400; }
-.part-label  { font-size: 14px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--mg); margin-bottom: 12px; }
-
-/* Cards */
-.label { font-size: 12px; color: var(--ts); margin-bottom: 5px; text-align: left; }
-.val   { font-size: 20px; font-weight: 600; color: var(--tp); }
-.row   { display: flex; gap: 10px; align-items: stretch; margin-bottom: 10px; }
-.card  { flex: 1; background: var(--bg-card); border-radius: var(--rad-lg); padding: 14px 16px; border: 1px solid var(--border); }
-.card.red-border   { border-color: var(--mr); }
-.card.green-border { border-color: var(--mg); }
-.card.gold-border  { border-color: var(--gold); }
-
-/* Step rows */
-.step-row  { display: flex; gap: 10px; align-items: flex-start; margin: 8px 0; }
-.step-num  { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-.step-text { font-size: 13px; color: var(--tp); line-height: 1.55; text-align: left; }
-
-/* Moroccan star decoration */
-.star-deco {
-  position: absolute; opacity: 0.04; pointer-events: none; z-index: 0;
+.slide-title {
+  font-size: 80px;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'League Spartan', sans-serif;
 }
 
-/* Image placeholder */
-.img-ph {
-  background: #0a0a0a; border: 2px dashed #2a2a2a; border-radius: var(--rad-md);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 8px; color: #444; font-size: 12px; font-weight: 500; text-align: center; padding: 12px;
-}
-.img-ph .icon { font-size: 28px; color: #333; }
-
-/* Hierarchy tree */
-.h-tree { display: flex; flex-direction: column; align-items: center; gap: 0; }
-.h-row  { display: flex; gap: 8px; justify-content: center; align-items: flex-start; position: relative; }
-.h-node {
-  padding: 7px 11px; border-radius: 7px; font-size: 11px; font-weight: 600;
-  text-align: center; border: 1px solid var(--border-light); background: var(--bg-card);
-  min-width: 90px; color: var(--tp); line-height: 1.3;
-}
-.h-node.gold  { border-color: var(--gold);  color: var(--gold);  background: rgba(181,161,107,0.08); }
-.h-node.red   { border-color: var(--mr);    color: var(--mr);    background: rgba(193,39,45,0.08); }
-.h-node.green { border-color: var(--mg);    color: #5ec47a;      background: rgba(0,98,51,0.10); }
-.h-node.grey  { border-color: #444;         color: #888; }
-.h-node.white { border-color: #555;         color: #ddd; }
-.h-vert { width: 2px; height: 22px; background: #333; margin: 0 auto; }
-.h-horiz-wrap { display: flex; position: relative; justify-content: center; }
-.h-horiz-wrap::before {
-  content: ''; position: absolute; top: 0; left: 50%; right: 50%;
-  height: 2px; background: #333; transform: translateX(-50%);
+/* Morocco star decoration */
+.ma-star {
+  display: inline-block;
+  color: var(--ma-green);
+  font-size: 28px;
+  line-height: 1;
 }
 
-/* For the spanning horizontal lines we'll use JS-drawn SVG overlays per-tree */
-
-/* Red line cards */
-.rl-card {
-  background: rgba(193,39,45,0.06); border: 1px solid rgba(193,39,45,0.25);
-  border-radius: var(--rad-lg); padding: 14px 16px; cursor: pointer;
-  transition: all 0.25s; text-align: left; margin: 8px 0;
+/* Subtitle bar chip */
+.ma-chip {
+  display: inline-block;
+  padding: 6px 14px;
+  background: var(--ma-red-soft);
+  color: var(--ma-red);
+  border: 1px solid var(--ma-red);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
 }
-.rl-card:hover, .rl-card.open { background: rgba(193,39,45,0.14); border-color: var(--mr); }
-.rl-title { font-size: 17px; font-weight: 700; color: var(--mr); }
-.rl-law   { font-size: 11px; color: #666; margin: 3px 0 6px; }
-.rl-body  { font-size: 13px; color: #bbb; line-height: 1.55; display: none; margin-top: 8px; }
-.rl-card.open .rl-body { display: block; }
-.rl-arrow { float: right; transition: transform 0.25s; color: var(--mr); }
-.rl-card.open .rl-arrow { transform: rotate(90deg); }
+.ma-chip.green {
+  background: var(--ma-green-soft);
+  color: #2CBF6A;
+  border-color: var(--ma-green);
+}
 
-/* Journalist cards */
+/* Card + layout primitives (shared with therac style) */
+.sec { margin: 0 0 1.2rem; }
+.label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; text-align: left; }
+.val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 12px; }
+.card {
+  flex: 1;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--color-border-tertiary);
+}
+.card.red { border-color: var(--ma-red); background: var(--ma-red-soft); }
+.card.green { border-color: var(--ma-green); background: var(--ma-green-soft); }
+.card.gold { border-color: var(--ma-gold); }
+
+/* Bars */
+.bar-wrap {
+  position: relative;
+  height: 42px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  margin-bottom: 6px;
+  border: 0.5px solid var(--color-border-tertiary);
+}
+.bar {
+  height: 100%;
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+  transition: width 0.8s ease;
+}
+.bar-label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 12px;
+  white-space: nowrap;
+  color: #fff;
+}
+
+/* Image placeholder boxes — user will add real images later */
+.img-placeholder {
+  border: 2px dashed var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  font-family: 'League Spartan', sans-serif;
+}
+.img-placeholder .tag {
+  display: block;
+  font-size: 11px;
+  color: var(--ma-gold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+/* Step rows (hierarchy) */
+.step-row { display: flex; gap: 10px; align-items: flex-start; margin: 8px 0; }
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--ma-red-soft); color: var(--ma-red);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+  border: 1px solid var(--ma-red);
+}
+.step-num.green { background: var(--ma-green-soft); color: #2CBF6A; border-color: var(--ma-green); }
+.step-num.gold { background: rgba(212,175,55,0.15); color: var(--ma-gold); border-color: var(--ma-gold); }
+.step-text {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.55;
+  text-align: left;
+}
+
+/* Binary box / info block */
+.info-box {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 14px 18px;
+  border: 1px solid var(--color-border-tertiary);
+  margin: 10px 0;
+  font-family: 'League Spartan', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  text-align: left;
+}
+.info-box .hl { color: var(--ma-red); font-weight: 600; }
+.info-box .hl-g { color: #2CBF6A; font-weight: 600; }
+
+/* Hierarchy tree (Al Mada) */
+.tree { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.tree .node {
+  padding: 10px 18px;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+.tree .node.crown { border-color: var(--ma-gold); background: rgba(212,175,55,0.12); }
+.tree .node.red { border-color: var(--ma-red); background: var(--ma-red-soft); color:#fff; }
+.tree .node.green { border-color: var(--ma-green); background: var(--ma-green-soft); color:#fff; }
+.tree .link { width: 2px; height: 18px; background: var(--color-border-primary); }
+.tree .branches { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+
+/* Pie-like slice visual for HACA */
+.haca-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.haca-seat {
+  aspect-ratio: 1/1;
+  border-radius: 4px;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+.haca-seat.king { background: var(--ma-red); color: #fff; border-color: var(--ma-red); }
+.haca-seat.pm { background: var(--ma-gold); color: #000; border-color: var(--ma-gold); }
+.haca-seat.parl { background: var(--color-background-secondary); color: #aaa; }
+
+/* Legend */
+.legend { display: flex; gap: 16px; font-size: 12px; color: var(--color-text-secondary); margin: 10px 0 0; flex-wrap: wrap; justify-content: center; }
+.legend span { display: flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+/* Three red lines bars */
+.red-line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--color-background-secondary);
+  border-left: 4px solid var(--ma-red);
+  border-radius: var(--border-radius-md);
+  margin: 8px 0;
+}
+.red-line .rl-word {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ma-red);
+  min-width: 120px;
+}
+.red-line .rl-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-align: left;
+  line-height: 1.5;
+}
+
+/* Journalist card */
 .j-card {
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--rad-md);
-  padding: 10px 14px; margin: 5px 0; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; gap: 12px;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 14px;
+  text-align: left;
+  flex: 1;
 }
-.j-card:hover, .j-card.open { border-color: var(--mr); background: rgba(193,39,45,0.05); }
-.j-year    { font-size: 22px; font-weight: 700; color: var(--mr); min-width: 44px; line-height: 1; }
-.j-meta    { flex: 1; }
-.j-name    { font-size: 14px; font-weight: 700; color: #fff; }
-.j-charge  { font-size: 11px; color: #666; margin-top: 1px; }
-.j-detail  { font-size: 12px; color: #aaa; margin-top: 7px; line-height: 1.5; display: none; }
-.j-card.open .j-detail { display: block; }
-.j-sent    { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; background: rgba(193,39,45,0.15); color: var(--mr); border: 1px solid rgba(193,39,45,0.3); margin-top: 4px; }
-.j-un      { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; background: rgba(181,161,107,0.12); color: var(--gold); border: 1px solid rgba(181,161,107,0.3); margin-top: 4px; margin-left: 4px; }
-
-/* Platform bars */
-.p-bar-row  { display: flex; align-items: center; gap: 10px; margin: 7px 0; }
-.p-name     { font-size: 13px; font-weight: 600; color: #fff; min-width: 100px; text-align: right; }
-.p-track    { flex: 1; height: 30px; background: #111; border-radius: 6px; overflow: hidden; border: 0.5px solid var(--border-light); }
-.p-fill     { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 700; color: #fff; transition: width 1.2s ease; width: 0; }
-.p-pct      { font-size: 12px; font-weight: 700; color: var(--ts); min-width: 42px; }
-
-/* Pegasus demo */
-.peg-phone  {
-  width: 100px; height: 190px; border: 3px solid #444; border-radius: 18px;
-  background: #0a0a0a; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; margin: 0 auto; transition: border-color 0.5s, box-shadow 0.5s; cursor: pointer;
+.j-card .name { font-size: 16px; font-weight: 700; color: #fff; margin: 0 0 4px; }
+.j-card .role { font-size: 11px; color: var(--ma-gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.j-card .charge { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; margin-bottom: 8px; }
+.j-card .sentence {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--ma-red-soft);
+  border: 1px solid var(--ma-red);
+  border-radius: 999px;
+  font-size: 12px;
+  color: #fff;
+  font-weight: 600;
 }
-.peg-phone.ok       { border-color: #444; }
-.peg-phone.infected { border-color: var(--mr); box-shadow: 0 0 30px rgba(193,39,45,0.5); animation: peg-pulse 1s ease infinite; }
-@keyframes peg-pulse { 0%,100%{box-shadow:0 0 10px rgba(193,39,45,0.3)} 50%{box-shadow:0 0 40px rgba(193,39,45,0.7)} }
-.peg-icon   { font-size: 36px; }
-.peg-label  { font-size: 9px; color: #444; text-align: center; margin-top: 8px; padding: 0 6px; }
-.peg-infected-tag { display: none; font-size: 9px; color: var(--mr); font-weight: 700; margin-top: 4px; text-align:center; }
-.peg-phone.infected .peg-infected-tag { display: block; }
-.peg-phone.infected .peg-label { color: #333; }
 
-/* Boycott bar */
-.boycott-bar-wrap { height: 50px; background: #111; border-radius: 8px; overflow: hidden; border: 0.5px solid #333; position: relative; margin: 8px 0; }
-.boycott-bar { height: 100%; background: linear-gradient(90deg, var(--mr), #ff6b6b); width: 0; transition: width 2s ease; border-radius: 8px 0 0 8px; }
-.boycott-bar-label { position: absolute; top: 50%; transform: translateY(-50%); left: 12px; font-size: 14px; font-weight: 700; color: #fff; }
-
-/* Stat box */
-.stat-box { background: var(--bg-card); border-radius: var(--rad-lg); padding: 16px; border: 1px solid var(--border); text-align: center; }
-.stat-num  { font-size: 52px; font-weight: 700; line-height: 1; }
-.stat-desc { font-size: 14px; color: var(--ts); margin-top: 6px; line-height: 1.4; }
-
-/* Timeline event */
-.timeline-event { display: flex; gap: 14px; align-items: flex-start; margin: 10px 0; }
-.tl-year        { font-size: 18px; font-weight: 700; color: var(--gold); min-width: 50px; }
-.tl-dot         { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-.tl-body        { font-size: 13px; color: #ccc; line-height: 1.5; }
-.tl-highlight   { font-weight: 700; color: #fff; }
-
-/* Binary/code box */
-.info-box { background: var(--bg-card); border-radius: var(--rad-md); padding: 12px 16px; border: 0.5px solid var(--border-light); margin: 8px 0; font-size: 13px; line-height: 1.8; color: var(--tp); text-align: left; }
-.hl-red   { color: var(--mr); font-weight: 600; }
-.hl-gold  { color: var(--gold); font-weight: 600; }
-.hl-green { color: #5ec47a; font-weight: 600; }
-
-/* Concentric circles for conclusion */
-.rings { position: relative; width: 340px; height: 340px; margin: 0 auto; }
-.ring  {
-  position: absolute; border-radius: 50%; border: 2px solid; display: flex;
-  align-items: center; justify-content: center; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+/* Platform tile */
+.platform-tile {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 14px 10px;
+  flex: 1;
+  text-align: center;
 }
-.ring-1 { width: 340px; height: 340px; border-color: rgba(193,39,45,0.3); background: rgba(193,39,45,0.04); }
-.ring-2 { width: 250px; height: 250px; border-color: rgba(181,161,107,0.4); background: rgba(181,161,107,0.05); }
-.ring-3 { width: 165px; height: 165px; border-color: rgba(0,98,51,0.5); background: rgba(0,98,51,0.07); }
-.ring-4 { width: 80px;  height: 80px;  border-color: rgba(193,39,45,0.8); background: rgba(193,39,45,0.15); }
-.ring-label { font-size: 11px; font-weight: 700; text-align: center; padding: 4px 8px; line-height: 1.3; }
-.ring-4 .ring-label { color: var(--mr); font-size: 10px; }
-.ring-3 .ring-label { color: #5ec47a; }
+.platform-tile .pct { font-size: 30px; font-weight: 700; color: var(--ma-gold); margin: 4px 0; }
+.platform-tile .plat { font-size: 13px; color: #fff; font-weight: 600; }
+.platform-tile .desc { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
 
-/* Moroccan pattern helper */
-.moroccan-divider {
-  height: 4px; background: linear-gradient(90deg, transparent, var(--mr), var(--gold), var(--mg), transparent);
-  margin: 16px 0; border-radius: 2px; opacity: 0.6;
+/* Boycott simulator slide */
+.boy-wrap {
+  position: relative;
+  height: 160px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border-tertiary);
+  overflow: hidden;
+  margin: 12px 0;
 }
+.boy-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ma-red);
+  opacity: 0;
+  transition: opacity 0.4s, transform 0.4s;
+}
+.slider-row { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+.slider-row input[type=range] { flex: 1; accent-color: var(--ma-red); }
+.slider-row .readout { min-width: 90px; text-align: right; font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--ma-gold); }
+
+/* Flag ribbon */
+.flag-stripe {
+  height: 4px;
+  background: linear-gradient(90deg, var(--ma-red) 0%, var(--ma-red) 50%, var(--ma-green) 50%, var(--ma-green) 100%);
+  width: 100%;
+  margin: 0;
+}
+
+/* Reusable */
+.tag-line {
+  font-size: 13px;
+  color: var(--ma-gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.muted { color: var(--color-text-secondary); }
+.mono { font-family: var(--font-mono); }
 </style>
 </head>
 <body>
-
 <div id="rotate-overlay">
   <div class="rotate-icon">📱</div>
   <p>Rotate your phone</p>
   <span>This presentation works best in landscape mode</span>
 </div>
-
 <div class="reveal">
 <div class="slides">
 
-<!-- ─── SLIDE 1: Title ─────────────────────────────────── -->
+<!-- Slide 0: QR code -->
 <section data-background-color="#000">
-  <!-- Moroccan star decoration -->
-  <svg class="star-deco" style="right:-60px;top:-60px;width:300px;height:300px;" viewBox="0 0 100 100">
-    <polygon points="50,5 61,37 95,37 67,57 78,89 50,69 22,89 33,57 5,37 39,37" fill="#C1272D"/>
-  </svg>
-  <svg class="star-deco" style="left:-60px;bottom:-60px;width:300px;height:300px;" viewBox="0 0 100 100">
-    <polygon points="50,5 61,37 95,37 67,57 78,89 50,69 22,89 33,57 5,37 39,37" fill="#006233"/>
-  </svg>
-
-  <div style="position:relative;z-index:1;">
-    <p style="font-size:13px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--mg);margin-bottom:20px;">Media Ownership & Power</p>
-    <p class="slide-title" style="font-size:64px;">A Kingdom's Grip<br>on Information</p>
-    <div class="moroccan-divider" style="max-width:500px;margin:24px auto;"></div>
-    <p class="slide-sub" style="font-size:22px;">Morocco's media ecosystem — who controls it,<br>who silences it, and what the palace cannot own.</p>
-  </div>
+  <p class="slide-title" style="font-size:50px;">Scan to follow along</p>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://morocco.omartaheri.com&bgcolor=000000&color=ffffff" style="margin-top:30px;border-radius:12px;">
+  <p style="font-size:20px; color:#aaa; margin-top:20px; font-family:'League Spartan',sans-serif;">morocco.omartaheri.com</p>
+  <div class="flag-stripe" style="margin-top:40px; max-width:400px; margin-left:auto; margin-right:auto;"></div>
 </section>
 
-<!-- ─── SLIDE 2: Hook ─────────────────────────────────── -->
+<!-- Slide 1: Title -->
 <section data-background-color="#000">
-  <div style="display:flex;align-items:center;gap:50px;max-width:1100px;margin:0 auto;">
-    <div style="flex:1;text-align:left;">
-      <p style="font-size:13px;font-weight:700;letter-spacing:3px;color:var(--mr);margin-bottom:14px;">THE STORY</p>
-      <p style="font-size:28px;font-weight:700;color:#fff;line-height:1.35;margin-bottom:20px;">
-        "Only <span style="color:var(--mr);">28%</span> of Moroccans<br>trust the news."
-      </p>
-      <p style="font-size:15px;color:#aaa;line-height:1.6;">
-        That isn't apathy. That's a <strong style="color:#fff;">verdict</strong>.<br><br>
-        Over two decades, Morocco's palace systematically captured every major information channel —
-        TV, print, radio, online — through ownership, economic coercion, and imprisonment.
-      </p>
-      <div class="moroccan-divider" style="margin-top:20px;"></div>
-      <p style="font-size:13px;color:#555;margin-top:12px;">— Reuters Institute Digital News Report 2025</p>
-    </div>
-    <div style="flex:0 0 340px;">
-      <img src="https://media2.giphy.com/media/Hz1hFjTarLPJGyOUNI/giphy.gif" style="width:100%;border-radius:12px;border:1px solid #222;">
-    </div>
-  </div>
+  <span class="ma-chip">Part 4 · Media Ownership & Power</span>
+  <p class="slide-title" style="font-size:70px; line-height:1.05;">Who Controls<br>the Message?</p>
+  <p style="font-size:28px; color:#aaa; margin-top:20px;">Media, Power & the Kingdom of Morocco</p>
+  <div class="flag-stripe" style="margin-top:40px; max-width:500px; margin-left:auto; margin-right:auto;"></div>
 </section>
 
-<!-- ─── SLIDE 3: Key Numbers ─────────────────────────── -->
+<!-- Slide 2: Flag / hook -->
 <section data-background-color="#000">
-  <p class="part-label">By the numbers</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;max-width:1000px;margin:0 auto;">
-    <div class="stat-box" style="border-color:var(--mr);">
-      <div class="stat-num" style="color:var(--mr);">120</div>
-      <div style="font-size:11px;color:var(--mr);font-weight:700;letter-spacing:2px;margin-top:4px;">OUT OF 180</div>
-      <div class="stat-desc">RSF World Press Freedom Index 2025</div>
-    </div>
-    <div class="stat-box" style="border-color:var(--gold);">
-      <div class="stat-num" style="color:var(--gold);">28%</div>
-      <div class="stat-desc">Moroccans who trust the news<br><span style="color:#555;font-size:11px;">Among lowest globally</span></div>
-    </div>
-    <div class="stat-box" style="border-color:var(--mg);">
-      <div class="stat-num" style="color:#5ec47a;">78%</div>
-      <div class="stat-desc">Get their news online<br><span style="color:#555;font-size:11px;">Mostly via WhatsApp & Facebook</span></div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" style="color:#aaa;">37</div>
-      <div class="stat-desc">Freedom House score<br><span style="color:#555;font-size:11px;">"Partly Free" /100</span></div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" style="color:var(--mr);">10K</div>
-      <div class="stat-desc">Phone numbers selected<br>for Pegasus surveillance</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" style="color:var(--gold);">92%</div>
-      <div class="stat-desc">Internet penetration<br><span style="color:#555;font-size:11px;">35.3M people online</span></div>
-    </div>
-  </div>
+  <p class="slide-title" style="font-size:48px;">Allah <span style="color:var(--ma-red);">·</span> Al Malik <span style="color:var(--ma-red);">·</span> Al Watan</p>
+  <p style="font-size:24px; color:#aaa; margin-top:14px;">God · The King · The Nation</p>
+  <img src="flag.gif" style="max-width:40%; max-height:42vh; border-radius:8px; margin-top:30px;">
+  <p style="font-size:18px; color:var(--ma-gold); margin-top:18px;">— the national motto — and the three red lines of Moroccan journalism.</p>
 </section>
 
-<!-- ─── SLIDE 4: Part I Title ─────────────────────────── -->
+<!-- Slide 3: The numbers hook -->
 <section data-background-color="#000">
-  <svg class="star-deco" style="left:50%;top:50%;transform:translate(-50%,-50%);width:500px;height:500px;" viewBox="0 0 100 100">
-    <polygon points="50,5 61,37 95,37 67,57 78,89 50,69 22,89 33,57 5,37 39,37" fill="#C1272D"/>
-  </svg>
-  <div style="position:relative;z-index:1;">
-    <p style="font-size:13px;font-weight:700;letter-spacing:4px;color:var(--mr);margin-bottom:12px;">PART I</p>
-    <p class="slide-title">Who Owns<br>the Media?</p>
-    <p class="slide-sub" style="margin-top:14px;">Patterns of ownership and influence on content</p>
+  <span class="ma-chip">The State of the Press</span>
+  <p class="slide-title" style="font-size:46px; margin-bottom:30px;">Morocco, by the numbers.</p>
+  <div class="row" style="max-width:1100px; margin:0 auto; gap:16px;">
+    <div class="card red">
+      <p class="label" style="color:#ffb8ba;">Press Freedom (RSF 2025)</p>
+      <p class="val" style="font-size:46px; color:#fff; font-weight:700;">120<span style="font-size:22px; color:#ffb8ba;">/180</span></p>
+      <p class="label" style="color:#ffb8ba;">countries</p>
+    </div>
+    <div class="card red">
+      <p class="label" style="color:#ffb8ba;">Freedom House</p>
+      <p class="val" style="font-size:46px; color:#fff; font-weight:700;">37<span style="font-size:22px; color:#ffb8ba;">/100</span></p>
+      <p class="label" style="color:#ffb8ba;">"Partly Free"</p>
+    </div>
+    <div class="card red">
+      <p class="label" style="color:#ffb8ba;">Trust in the news</p>
+      <p class="val" style="font-size:46px; color:#fff; font-weight:700;">28<span style="font-size:22px; color:#ffb8ba;">%</span></p>
+      <p class="label" style="color:#ffb8ba;">among the lowest globally — Reuters Institute</p>
+    </div>
   </div>
+  <p style="font-size:16px; color:#aaa; margin-top:24px;">This is the story of how an entire information ecosystem was captured.</p>
 </section>
 
-<!-- ─── SLIDE 5: Al Mada Hierarchy ───────────────────── -->
+<!-- Slide 4: Part I section divider -->
 <section data-background-color="#000">
-  <p class="part-label">The Royal Conglomerate</p>
-  <p style="font-size:22px;font-weight:700;color:#fff;margin-bottom:16px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">Al Mada — The Crown's Financial Empire (~3% of Morocco's GDP)</p>
-
-  <div style="max-width:1100px;margin:0 auto;">
-    <!-- Level 1: Royal family -->
-    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:0;">
-      <div class="h-node gold" style="flex:1.5;">Mohammed VI<br><span style="font-size:9px;font-weight:400;color:#888;">via SIGER & ERGIS</span><br><strong>~50.6%</strong></div>
-      <div class="h-node gold" style="flex:1;">Prince Moulay Rachid<br><span style="font-size:9px;color:#888;">Providence Holding</span><br><strong>~18.6%</strong></div>
-      <div class="h-node gold" style="flex:1;">Princess Lalla Meryem<br><span style="font-size:9px;color:#888;">Unihold</span><br><strong>~9-11%</strong></div>
-      <div class="h-node gold" style="flex:1;">Princess Lalla Asma<br><span style="font-size:9px;color:#888;">Yano Participation</span><br><strong>~9-11%</strong></div>
-    </div>
-
-    <!-- Connector -->
-    <div style="display:flex;align-items:flex-start;justify-content:center;height:36px;position:relative;">
-      <div style="position:absolute;top:0;left:12%;right:12%;height:2px;background:#333;"></div>
-      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:36px;background:#333;"></div>
-    </div>
-
-    <!-- Level 2: Al Mada -->
-    <div style="display:flex;justify-content:center;margin-bottom:0;">
-      <div class="h-node gold" style="width:220px;font-size:14px;padding:12px 16px;">
-        <div style="font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:4px;">AL MADA</div>
-        <div style="font-size:10px;color:#888;">formerly SNI · rebranded 2018</div>
-        <div style="font-size:10px;margin-top:4px;color:#aaa;">Royal family controls ≈<strong style="color:var(--gold);">60%</strong></div>
-      </div>
-    </div>
-
-    <!-- Connector to media -->
-    <div style="display:flex;align-items:flex-start;justify-content:center;height:36px;position:relative;">
-      <div style="position:absolute;top:0;left:15%;right:15%;height:2px;background:#333;"></div>
-      <div style="position:absolute;top:0;width:2px;height:36px;background:#333;left:25%;"></div>
-      <div style="position:absolute;top:0;width:2px;height:36px;background:#333;left:40%;"></div>
-      <div style="position:absolute;top:0;width:2px;height:36px;background:#333;left:60%;"></div>
-      <div style="position:absolute;top:0;width:2px;height:36px;background:#333;left:75%;"></div>
-    </div>
-
-    <!-- Level 3: Media companies -->
-    <div style="display:flex;gap:6px;justify-content:center;">
-      <div class="h-node green" style="flex:1;">SOREAD<br><span style="font-size:9px;color:#888;">Al Mada 20%</span><br><strong style="font-size:10px;">2M TV</strong></div>
-      <div class="h-node green" style="flex:1;">EcoMedias<br><span style="font-size:9px;color:#888;">via Global Comm.</span><br><strong style="font-size:10px;">L'Economiste · Assabah</strong></div>
-      <div class="h-node green" style="flex:1;">Medi1 Radio<br><span style="font-size:9px;color:#888;">CDG Invest (state)</span><br><strong style="font-size:10px;">Radio & TV</strong></div>
-      <div class="h-node green" style="flex:1;">La Nouvelle Tribune<br><span style="font-size:9px;color:#888;">via OHIO / subsidiaries</span><br><strong style="font-size:10px;">Print & digital</strong></div>
-    </div>
-
-    <div class="info-box" style="margin-top:14px;font-size:12px;">
-      <span class="hl-gold">Mounir Majidi</span> — the king's personal secretary since 2000 — manages Al Mada's strategy.
-      SIGER and ERGIS are both <em>anagrams of "regis"</em> — Latin for "king." The ownership chain is <span class="hl-red">deliberately difficult to trace</span>.
-    </div>
-  </div>
+  <p class="tag-line">— part one —</p>
+  <p class="slide-title" style="font-size:72px;">Who owns<br>the media?</p>
+  <div class="flag-stripe" style="margin-top:30px; max-width:400px; margin-left:auto; margin-right:auto;"></div>
 </section>
 
-<!-- ─── SLIDE 6: Television Total State Capture ──────── -->
+<!-- Slide 5: Al Mada title with crown -->
 <section data-background-color="#000">
-  <p class="part-label">January 2025 — SNRT acquires everything</p>
-  <p style="font-size:22px;font-weight:700;color:#fff;margin-bottom:14px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">Television: Unprecedented Concentration</p>
-
-  <div style="max-width:1100px;margin:0 auto;">
-    <!-- SNRT at top -->
-    <div style="display:flex;justify-content:center;margin-bottom:0;">
-      <div class="h-node red" style="width:280px;font-size:13px;padding:10px 14px;">
-        SNRT — Société Nationale de Radiodiffusion<br>
-        <span style="font-size:10px;color:#888;">100% state-owned · CEO: Faiçal Laraïchi</span><br>
-        <span style="font-size:10px;color:var(--mr);">Receives 88% of all public media funding</span>
-      </div>
-    </div>
-
-    <!-- Connector row -->
-    <div style="display:flex;align-items:flex-start;justify-content:center;height:30px;position:relative;">
-      <div style="position:absolute;top:0;left:6%;right:6%;height:2px;background:#333;"></div>
-      <div style="position:absolute;top:0;left:14%;width:2px;height:30px;background:#333;"></div>
-      <div style="position:absolute;top:0;left:28%;width:2px;height:30px;background:#333;"></div>
-      <div style="position:absolute;top:0;left:42%;width:2px;height:30px;background:#333;"></div>
-      <div style="position:absolute;top:0;left:56%;width:2px;height:30px;background:#333;"></div>
-      <div style="position:absolute;top:0;left:70%;width:2px;height:30px;background:#333;"></div>
-      <div style="position:absolute;top:0;left:86%;width:2px;height:30px;background:#333;"></div>
-    </div>
-
-    <!-- Channels -->
-    <div style="display:flex;gap:5px;justify-content:center;margin-bottom:10px;">
-      <div class="h-node red" style="flex:1;font-size:9px;">Al Aoula<br><span style="color:#666;">General</span></div>
-      <div class="h-node red" style="flex:1;font-size:9px;">Arryadia<br><span style="color:#666;">Sports</span></div>
-      <div class="h-node red" style="flex:1;font-size:9px;">Athaqafia<br><span style="color:#666;">Culture</span></div>
-      <div class="h-node red" style="flex:1;font-size:9px;">Assadissa<br><span style="color:#666;">Religious</span></div>
-      <div class="h-node red" style="flex:1;font-size:9px;">Tamazight TV<br><span style="color:#666;">Amazigh</span></div>
-      <div class="h-node red" style="flex:2;font-size:9px;border-color:var(--gold);color:var(--gold);">2M TV <span style="display:block;color:#888;">acquired Jan 2025</span>formerly 72% state+20% Al Mada</div>
-      <div class="h-node red" style="flex:2;font-size:9px;border-color:var(--gold);color:var(--gold);">Medi1 TV <span style="display:block;color:#888;">acquired Jan 2025</span>CDG Invest purchase 2021</div>
-    </div>
-
-    <!-- Régie3 -->
-    <div style="display:flex;gap:10px;align-items:center;justify-content:center;">
-      <div class="h-node red" style="width:160px;font-size:10px;">MAP News Agency<br><span style="color:#888;">Gov-owned since 1973</span></div>
-      <div class="h-node red" style="width:160px;font-size:10px;">Régie3<br><span style="color:#888;">State advertising agency</span></div>
-    </div>
-
-    <div style="background:rgba(193,39,45,0.08);border:1px solid rgba(193,39,45,0.3);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:13px;text-align:left;">
-      📺 <strong style="color:var(--mr);">All major TV channels + dominant radio + state ad agency</strong> — now under one roof.
-      CEO Laraïchi assured "editorial independence." He leads every single one of them.
-    </div>
-  </div>
+  <p class="slide-title" style="font-size:56px;">Al Mada</p>
+  <p style="font-size:22px; color:var(--ma-gold); margin-top:8px;">the royal conglomerate at the center of everything</p>
+  <img src="crown.gif" style="max-width:32%; max-height:38vh; border-radius:8px; margin-top:24px;">
+  <p style="font-size:16px; color:#aaa; margin-top:16px; max-width:800px; margin-left:auto; margin-right:auto;">Morocco's largest private holding company. Roughly <span style="color:var(--ma-gold); font-weight:700;">3% of national GDP</span>.</p>
 </section>
 
-<!-- ─── SLIDE 7: Print & Online Map ──────────────────── -->
+<!-- Slide 6: Royal family ownership hierarchy -->
 <section data-background-color="#000">
-  <p class="part-label">Print & Online Ownership</p>
-  <p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">Every major outlet has a palace connection</p>
+  <div style="max-width:1100px; margin:0 auto; text-align:left;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:6px;">Who owns Al Mada?</p>
+    <p class="label">The royal family controls ~60% — through shell companies with names like <span style="color:var(--ma-gold);">SIGER</span> and <span style="color:var(--ma-gold);">ERGIS</span> (anagrams of <em>regis</em> — Latin for "king").</p>
 
-  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-    <div class="card gold-border">
-      <div style="font-size:11px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:6px;">AL MADA-LINKED</div>
-      <div style="font-size:13px;font-weight:700;color:#fff;">L'Economiste</div>
-      <div style="font-size:11px;color:#777;">EcoMedias · Dilami + Al Mada (Global Comm.)</div>
-      <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;">Assabah</div>
-      <div style="font-size:11px;color:#777;">EcoMedias group</div>
-      <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;">La Nouvelle Tribune</div>
-      <div style="font-size:11px;color:#777;">Al Mada subsidiary OHIO</div>
-    </div>
-
-    <div class="card red-border">
-      <div style="font-size:11px;color:var(--mr);font-weight:700;letter-spacing:1px;margin-bottom:6px;">PALACE-LINKED BILLIONAIRES</div>
-      <div style="font-size:13px;font-weight:700;color:#fff;">Aujourd'hui Le Maroc</div>
-      <div style="font-size:11px;color:#777;">PM Aziz Akhannouch (billionaire)</div>
-      <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;">Les Inspirations ECO</div>
-      <div style="font-size:11px;color:#777;">Akhannouch + ex-minister Elalamy</div>
-      <div style="margin-top:8px;font-size:13px;font-weight:700;color:#fff;">Le360</div>
-      <div style="font-size:11px;color:#777;">Aziz Daki — recruited by Majidi. El Confidencial: "quasi-official palace journal"</div>
-    </div>
-
-    <div class="card" style="border-color:#444;">
-      <div style="font-size:11px;color:#666;font-weight:700;letter-spacing:1px;margin-bottom:6px;">CONTESTED / CLOSED</div>
-      <div style="font-size:13px;font-weight:700;color:#fff;">Akhbar Al-Youm</div>
-      <div style="font-size:11px;color:#777;">Effectively shuttered — both editors jailed</div>
-      <div style="margin-top:8px;font-size:13px;font-weight:700;color:var(--mr);">Lakome</div>
-      <div style="font-size:11px;color:#777;">Banned Oct 2013. Ali Anouzla arrested under terrorism law</div>
-      <div style="margin-top:8px;font-size:13px;font-weight:700;color:var(--mr);">Nichane / Le Journal</div>
-      <div style="font-size:11px;color:#777;">Advertising boycott → closure</div>
-    </div>
-
-    <div class="card" style="grid-column:span 3;border-color:#333;">
-      <div style="display:flex;gap:20px;align-items:center;">
-        <div>
-          <div style="font-size:11px;color:#777;font-weight:700;letter-spacing:1px;margin-bottom:4px;">ONLINE — CONTESTED SPACE</div>
-          <div style="font-size:13px;color:#ddd;"><strong style="color:#fff;">Hespress</strong> — Morocco's most-visited site (founded 2007). Once alternative, now accommodating. Internal 2019 crisis over UAE influence.</div>
-        </div>
-        <div style="flex:0 0 200px;">
-          <div style="font-size:11px;color:#777;font-weight:700;letter-spacing:1px;margin-bottom:4px;">CHOUF TV (YOUTUBE)</div>
-          <div style="font-size:13px;color:#ddd;"><strong style="color:#fff;">18M</strong> Facebook followers · <strong style="color:#fff;">1B+</strong> monthly YouTube views. Founder Driss Chahtane. Relationship with security forces questioned.</div>
-        </div>
+    <div class="tree" style="margin-top:20px;">
+      <div class="node crown">👑 King Mohammed VI &nbsp;·&nbsp; ~50.6%</div>
+      <div class="link"></div>
+      <div class="branches">
+        <div class="node">Prince Moulay Rachid<br><span style="color:var(--ma-gold);">~18.6%</span></div>
+        <div class="node">Princess Lalla Meryem<br><span style="color:var(--ma-gold);">~9–11%</span></div>
+        <div class="node">Princess Lalla Asma<br><span style="color:var(--ma-gold);">~9–11%</span></div>
+        <div class="node">Princess Lalla Hasna<br><span style="color:var(--ma-gold);">~9–11%</span></div>
       </div>
+      <div class="link"></div>
+      <div class="node red" style="font-size:16px;">Royal family total ≈ 60% of Al Mada</div>
     </div>
+
+    <p class="label" style="text-align:center; margin-top:18px; font-size:12px;">Source: Business Empires · Media Ownership Monitor</p>
   </div>
 </section>
 
-<!-- ─── SLIDE 8: HACA ─────────────────────────────────── -->
+<!-- Slide 7: Al Mada reach -->
 <section data-background-color="#000">
-  <p class="part-label">The Regulator</p>
-  <p style="font-size:22px;font-weight:700;color:#fff;margin-bottom:14px;text-align:left;max-width:1000px;margin-left:auto;margin-right:auto;">HACA — "Independent Administrative Authority"</p>
+  <div style="max-width:1100px; margin:0 auto; text-align:left;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:6px;">Al Mada's reach isn't just media.</p>
+    <p class="label">Economic dominance is inseparable from media control.</p>
 
-  <div style="max-width:1000px;margin:0 auto;display:flex;gap:16px;align-items:flex-start;">
-    <div style="flex:1;">
-      <!-- HACA board composition -->
-      <div class="card" style="margin-bottom:10px;">
-        <p class="label">CONSEIL SUPÉRIEUR DE LA COMMUNICATION AUDIOVISUELLE — 9 members</p>
-        <div style="margin-top:8px;">
-          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
-            <div class="h-node gold" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">👑 Royal appt.</div>
-            <div class="h-node gold" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">👑 Royal appt.</div>
-            <div class="h-node gold" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">👑 Royal appt.</div>
-            <div class="h-node gold" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">👑 Royal appt.</div>
-            <div class="h-node gold" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">👑 Royal appt.</div>
-            <div class="h-node grey" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">PM appt.</div>
-            <div class="h-node grey" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">PM appt.</div>
-            <div class="h-node grey" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">Parliament</div>
-            <div class="h-node grey" style="font-size:10px;flex:0 0 auto;padding:6px 10px;">Parliament</div>
-          </div>
-          <div style="font-size:12px;color:#777;">The PM is himself appointed by the king. Parliament elected under palace-influenced conditions.</div>
-        </div>
+    <div class="row" style="margin-top:16px; flex-wrap:wrap;">
+      <div class="card" style="min-width:150px;">
+        <p class="label" style="color:var(--ma-gold); font-weight:600;">Banking</p>
+        <p class="val" style="font-size:16px;">Attijariwafa Bank<br><span class="muted" style="font-size:12px;">Morocco's largest</span></p>
       </div>
-
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">✕</div>
-        <div class="step-text"><strong>2009:</strong> Declined all 5 private TV license applications on "financial grounds." Preserved state/royal TV monopoly.</div>
+      <div class="card" style="min-width:150px;">
+        <p class="label" style="color:var(--ma-gold); font-weight:600;">Telecoms</p>
+        <p class="val" style="font-size:16px;">Inwi</p>
       </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">✕</div>
-        <div class="step-text"><strong>RSF request refused:</strong> When researchers requested ownership data (which HACA legally receives), the request was denied.</div>
+      <div class="card" style="min-width:150px;">
+        <p class="label" style="color:var(--ma-gold); font-weight:600;">Mining</p>
+        <p class="val" style="font-size:16px;">Managem</p>
       </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">!</div>
-        <div class="step-text"><strong>2025 proposal:</strong> Expand HACA's authority to regulate digital platforms and social media — the palace wants broadcast-era controls applied to the internet.</div>
+      <div class="card" style="min-width:150px;">
+        <p class="label" style="color:var(--ma-gold); font-weight:600;">Energy</p>
+        <p class="val" style="font-size:16px;">Nareva</p>
+      </div>
+      <div class="card" style="min-width:150px;">
+        <p class="label" style="color:var(--ma-gold); font-weight:600;">Retail</p>
+        <p class="val" style="font-size:16px;">Marjane</p>
+      </div>
+      <div class="card" style="min-width:150px;">
+        <p class="label" style="color:var(--ma-gold); font-weight:600;">Construction</p>
+        <p class="val" style="font-size:16px;">LafargeHolcim Maroc</p>
       </div>
     </div>
 
-    <div style="flex:0 0 220px;display:flex;flex-direction:column;gap:10px;">
-      <div class="img-ph" style="height:130px;">
-        <div class="icon">🏛️</div>
-        <div>HACA Headquarters<br>Rabat, Morocco</div>
-      </div>
-      <div class="card" style="background:rgba(193,39,45,0.06);border-color:rgba(193,39,45,0.3);">
-        <div style="font-size:11px;color:var(--mr);font-weight:700;letter-spacing:1px;margin-bottom:6px;">ACADEMIC VERDICT</div>
-        <div style="font-size:12px;color:#bbb;line-height:1.5;font-style:italic;">"A close look at HACA sheds doubt on its self-proclaimed independence... the state holds all the power within HACA's highest decision making apparatus."</div>
-        <div style="font-size:10px;color:#555;margin-top:6px;">— Simon Fraser University</div>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div style="font-size:11px;color:#777;margin-bottom:4px;">State media are exempt from</div>
-        <div style="font-size:16px;font-weight:700;color:var(--mr);">concentration rules</div>
-        <div style="font-size:11px;color:#555;margin-top:2px;">Only private media must comply</div>
-      </div>
+    <div class="info-box" style="margin-top:18px;">
+      <span class="hl">4 of the top 5 media companies</span> in Morocco have direct or indirect ownership ties to Al Mada — through chains like <span class="mono">OHIO</span>, <span class="mono">Global Communication</span>, and <span class="mono">Wafa Assurances</span>, deliberately hard to trace.
     </div>
   </div>
 </section>
 
-<!-- ─── SLIDE 9: Advertising as a Weapon ─────────────── -->
+<!-- Slide 8: Television landscape -->
 <section data-background-color="#000">
-  <p class="part-label">Economic Warfare</p>
-  <p style="font-size:22px;font-weight:700;color:#fff;margin-bottom:14px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">Advertising as the Primary Enforcement Mechanism</p>
+  <div style="max-width:1100px; margin:0 auto;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:14px; text-align:left;">Television: state control, from every angle.</p>
 
-  <div style="max-width:1100px;margin:0 auto;display:flex;gap:16px;align-items:flex-start;">
-    <div style="flex:1;">
-      <div class="step-row" style="margin-bottom:10px;">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);font-size:14px;">1</div>
-        <div class="step-text"><strong style="color:var(--mr);">Coordinated boycotts</strong> — ONA/SNI (Al Mada predecessor) withdraws ads from critical outlets, signaling state enterprises and allied businesses to follow. Nichane, TelQuel, Le Journal → all closed.</div>
+    <div class="row" style="gap:14px;">
+      <div class="card red" style="text-align:left;">
+        <p class="label" style="color:#ffb8ba;font-weight:600;">SNRT</p>
+        <p class="val" style="font-size:16px;">Société Nationale de Radiodiffusion et de Télévision</p>
+        <p class="label" style="color:#ffb8ba; margin-top:10px;">ownership</p>
+        <p class="val" style="font-size:32px; font-weight:700;">100% state</p>
+        <p class="label" style="color:#ffb8ba; margin-top:8px;">9 TV channels · 6 radio · <strong>88%</strong> of all public media funding</p>
       </div>
-      <div class="step-row" style="margin-bottom:10px;">
-        <div class="step-num" style="background:rgba(181,161,107,0.15);color:var(--gold);font-size:14px;">2</div>
-        <div class="step-text"><strong style="color:var(--gold);">Propping up compliant outlets</strong> — Revenue of pro-government newspapers is <strong>11–14× their sales revenue</strong>. Massive advertising subsidies unrelated to readership.</div>
+      <div class="card red" style="text-align:left;">
+        <p class="label" style="color:#ffb8ba;font-weight:600;">2M TV (SOREAD)</p>
+        <p class="val" style="font-size:16px;">~33% of Moroccan viewership</p>
+        <p class="label" style="color:#ffb8ba; margin-top:10px;">state</p>
+        <p class="val" style="font-size:22px; font-weight:700;">72%</p>
+        <p class="label" style="color:#ffb8ba;">Al Mada</p>
+        <p class="val" style="font-size:22px; font-weight:700;">20%</p>
       </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(0,98,51,0.15);color:var(--mg);font-size:14px;">3</div>
-        <div class="step-text"><strong style="color:#5ec47a;">Opaque state ad distribution</strong> — No transparent criteria for who gets state advertising. MOM calls it "an opaque and unjustified procedure."</div>
-      </div>
-
-      <div class="moroccan-divider" style="margin:14px 0;"></div>
-
-      <p style="font-size:12px;color:#555;font-style:italic;">"The flip side of the boycott involves encouraging wealthy businessmen close to the government to create well-funded media groups that pour millions of dirhams into officially-sanctioned advertising in newspapers that might have a circulation of no more than 2,000."<br>— Carnegie Endowment, 2010</p>
-    </div>
-
-    <div style="flex:0 0 310px;">
-      <p class="label" style="margin-bottom:8px;">The Casualties</p>
-      <div class="card" style="margin-bottom:6px;border-left:3px solid var(--mr);border-radius:0 var(--rad-md) var(--rad-md) 0;">
-        <div style="font-size:13px;font-weight:700;color:#fff;">Le Journal Hebdomadaire</div>
-        <div style="font-size:11px;color:#777;">Closed Jan 2010 — advertising boycott + libel judgments</div>
-        <div style="font-size:11px;color:var(--mr);margin-top:2px;">described as "Morocco's most courageous publication"</div>
-      </div>
-      <div class="card" style="margin-bottom:6px;border-left:3px solid var(--mr);border-radius:0 var(--rad-md) var(--rad-md) 0;">
-        <div style="font-size:13px;font-weight:700;color:#fff;">Nichane</div>
-        <div style="font-size:11px;color:#777;">Best-selling weekly · Closed Oct 2010</div>
-        <div style="font-size:11px;color:var(--mr);margin-top:2px;">TelQuel confirmed: "sustained advertising boycott initiated by ONA/SNI"</div>
-      </div>
-      <div class="card" style="border-left:3px solid var(--mr);border-radius:0 var(--rad-md) var(--rad-md) 0;">
-        <div style="font-size:13px;font-weight:700;color:#fff;">Akhbar Al-Youm</div>
-        <div style="font-size:11px;color:#777;">Last independent newspaper — editors imprisoned on sexual assault charges</div>
-        <div style="font-size:11px;color:var(--mr);margin-top:2px;">Bouachrine 2018 · Raissouni 2020</div>
+      <div class="card red" style="text-align:left;">
+        <p class="label" style="color:#ffb8ba;font-weight:600;">Medi1 TV</p>
+        <p class="val" style="font-size:16px;">Purchased 2021 by CDG Invest</p>
+        <p class="label" style="color:#ffb8ba; margin-top:10px;">via</p>
+        <p class="val" style="font-size:22px; font-weight:700;">Caisse de Dépôt et de Gestion</p>
+        <p class="label" style="color:#ffb8ba; margin-top:8px;">state-owned — MAD 105 million</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── SLIDE 10: Three Red Lines ─────────────────────── -->
+<!-- Slide 9: January 2025 consolidation -->
 <section data-background-color="#000">
-  <div style="display:flex;gap:40px;align-items:center;max-width:1100px;margin:0 auto;">
-    <div style="flex:1;">
-      <p class="part-label">The Limits of Journalism</p>
-      <p style="font-size:24px;font-weight:700;color:#fff;margin-bottom:6px;">The Three Red Lines</p>
-      <p style="font-size:13px;color:#777;margin-bottom:18px;">A mirror of the national motto: <em style="color:#aaa;">Allah, al Malik, al Watan</em></p>
-
-      <div class="rl-card" onclick="this.classList.toggle('open')">
-        <div class="rl-title">&#x2715; The Monarchy <span class="rl-arrow">▶</span></div>
-        <div class="rl-law">Penal Code Art. 267.5 — 1 to 3 years' imprisonment</div>
-        <div class="rl-body">The royal family's business interests and personal lives cannot be critically examined. The 2016 Press Code eliminated prison sentences for press offenses — but parliament simultaneously inserted Art. 267.5 into the <em>penal code</em>. Journalists are now tried as ordinary criminals.</div>
-      </div>
-
-      <div class="rl-card" onclick="this.classList.toggle('open')">
-        <div class="rl-title">&#x2715; Western Sahara <span class="rl-arrow">▶</span></div>
-        <div class="rl-law">Territorial integrity laws — undermining national unity</div>
-        <div class="rl-body">Western Sahara must be discussed exclusively as an integral part of Morocco. Any reference to "occupation," self-determination, or supporting Sahrawi rights is prosecutable. Ali Anouzla faced 30 years under the anti-terrorism law for linking to a critical article.</div>
-      </div>
-
-      <div class="rl-card" onclick="this.classList.toggle('open')">
-        <div class="rl-title">&#x2715; Islam <span class="rl-arrow">▶</span></div>
-        <div class="rl-law">Anti-terrorism Law 03-03 — 2 to 6 years</div>
-        <div class="rl-body">Islam cannot be criticized or questioned. The anti-terrorism law with Article 218-2 punishes "glorifying" terrorism with 2–6 years and allows 12-day pre-arraignment detention without charge. Used against journalists covering extremism critically.</div>
-      </div>
-
-      <div style="margin-top:14px;background:rgba(193,39,45,0.08);border:1px solid rgba(193,39,45,0.25);border-radius:8px;padding:10px 14px;font-size:13px;color:#bbb;">
-        <span class="hl-red">~80%</span> of Moroccan media professionals admit to practicing <strong>self-censorship</strong>. — CPJ
-      </div>
-    </div>
-
-    <div style="flex:0 0 280px;text-align:center;">
-      <img src="https://media1.giphy.com/media/CjstZWxn5tqsw6s8zN/giphy.gif" style="width:100%;border-radius:12px;border:1px solid #222;margin-bottom:12px;">
-      <div style="font-size:12px;color:#555;">Click each red line to expand</div>
-    </div>
+  <p class="tag-line">january 2025</p>
+  <p class="slide-title" style="font-size:50px; line-height:1.1;">Total Control.</p>
+  <img src="tvstatic.gif" style="max-width:50%; max-height:38vh; border-radius:8px; margin-top:24px;">
+  <div class="info-box" style="max-width:900px; margin: 24px auto 0; text-align:center;">
+    SNRT completed the acquisition of <span class="hl">2M</span>, <span class="hl">Medi1 TV</span>, and the public advertising agency <span class="hl">Régie3</span> — consolidating all major television channels, dominant radio networks, and public advertising under <strong>a single state entity</strong>.
   </div>
 </section>
 
-<!-- ─── SLIDE 11: The Journalists ─────────────────────── -->
+<!-- Slide 10: Print & Online hierarchy -->
 <section data-background-color="#000">
-  <p class="part-label">The Journalists Who Crossed Them</p>
-  <p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">A Pattern of Weaponized Charges — Click each to expand</p>
+  <div style="max-width:1100px; margin:0 auto; text-align:left;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:14px;">Print & Online: a map of influence</p>
 
-  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-    <div class="j-card" onclick="this.classList.toggle('open')">
-      <div class="j-year">2013</div>
-      <div class="j-meta">
-        <div class="j-name">Ali Anouzla — Lakome</div>
-        <div class="j-charge">Charged: "Material support for terrorism" · Linked to an El País article containing an AQIM video</div>
-        <div class="j-detail">
-          Arrested Sept 17, 2013 — faced up to 30 years. The article itself was <em>critical</em> of the video. Amnesty declared him a prisoner of conscience. RSF named him "information hero" 2014. Spanish prosecutors dismissed parallel lawsuit against El País, calling it standard journalistic practice.
-          <div><span class="j-sent">Charges dropped</span><span class="j-un">Lakome banned permanently</span></div>
-        </div>
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong style="color:var(--ma-gold);">Le Matin du Sahara</strong> — founded 1971 as a palace creation. CPJ calls it a "pro-regime newspaper."
       </div>
     </div>
-
-    <div class="j-card" onclick="this.classList.toggle('open')">
-      <div class="j-year">2018</div>
-      <div class="j-meta">
-        <div class="j-name">Taoufik Bouachrine — Akhbar Al-Youm</div>
-        <div class="j-charge">Charged: Human trafficking, rape, sexual abuse · Feb 23, 2018</div>
-        <div class="j-detail">
-          Trial held behind closed doors. 4 of 15 alleged victims denied involvement. One woman sentenced 6 months for accusing police of falsifying her statement. Pegasus Project confirmed at least 2 women's phones were under surveillance. Journalist Afaf Bernani fled Morocco rather than give false testimony.
-          <div><span class="j-sent">15 years on appeal</span><span class="j-un">UN: arbitrary detention</span></div>
-        </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong style="color:var(--ma-gold);">L'Economiste</strong> (EcoMedias) — co-owned by Dilami & the Kettani family's SOPAR, with Al Mada's <em>Global Communication</em> among shareholders.
       </div>
     </div>
-
-    <div class="j-card" onclick="this.classList.toggle('open')">
-      <div class="j-year">2019</div>
-      <div class="j-meta">
-        <div class="j-name">Hajar Raissouni — Akhbar Al-Youm</div>
-        <div class="j-charge">Charged: "Unlawful abortion" + "extramarital sex" · Arrested leaving a clinic</div>
-        <div class="j-detail">
-          She maintained she was treated for a blood clot. From custody, she described interrogation about her political writings, her newspaper, and her uncle Soulaimane. Her conviction remains on record even after a royal pardon.
-          <div><span class="j-sent">1 year (pardoned)</span><span class="j-un">Conviction stands</span></div>
-        </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <strong style="color:var(--ma-gold);">Aujourd'hui Le Maroc</strong> & <strong style="color:var(--ma-gold);">Les Inspirations ECO</strong> — shareholders include current PM <em>Aziz Akhannouch</em> (billionaire) and former minister <em>Moulay Hafid Elalamy</em>.
       </div>
     </div>
-
-    <div class="j-card" onclick="this.classList.toggle('open')">
-      <div class="j-year">2020</div>
-      <div class="j-meta">
-        <div class="j-name">Omar Radi — Investigative journalist</div>
-        <div class="j-charge">Charged: Espionage + rape · Amnesty revealed Pegasus infection weeks before</div>
-        <div class="j-detail">
-          Amnesty documented "network injection" attacks — his phone browser was silently redirected to install Pegasus via what requires government-level mobile operator access. Trial graded "D — abuse of process" by Clooney Foundation TrialWatch. Dutch diplomat who could clear him was denied the right to testify.
-          <div><span class="j-sent">6 years</span><span class="j-un">Pegasus confirmed on phone</span></div>
-        </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <strong style="color:var(--ma-gold);">Le360</strong> (2013) — Spanish El Confidencial describes it as a <em>"quasi-official"</em> journal used to convey palace messages. Linked to Mounir Majidi via Edit Holding.
       </div>
     </div>
-
-    <div class="j-card" onclick="this.classList.toggle('open')">
-      <div class="j-year">2020</div>
-      <div class="j-meta">
-        <div class="j-name">Soulaimane Raissouni — Akhbar Al-Youm editor</div>
-        <div class="j-charge">Charged: Sexual assault via anonymous Facebook post · Arrested 2 days after COVID editorial</div>
-        <div class="j-detail">
-          Held over a year before trial. Conducted a <strong>122-day hunger strike</strong> that severely damaged his health. Sentenced in absentia while his defense team was absent. UN Working Group: detention "arbitrary" and linked to his writings.
-          <div><span class="j-sent">5 years</span><span class="j-un">UN: arbitrary detention</span></div>
-        </div>
+    <div class="step-row">
+      <div class="step-num">5</div>
+      <div class="step-text">
+        <strong style="color:var(--ma-gold);">Hespress</strong> — Morocco's most-visited news site. Originally independent, shifted toward accommodation after 2011.
       </div>
     </div>
-
-    <div class="j-card" onclick="this.classList.toggle('open')">
-      <div class="j-year">2020</div>
-      <div class="j-meta">
-        <div class="j-name">Maati Monjib — Historian</div>
-        <div class="j-charge">Charged: "Undermining state security" for training citizen journalists</div>
-        <div class="j-detail">
-          Charges filed 2015, arrested Dec 2020. Amnesty confirmed Pegasus targeting of his phone. Pardoned July 2024 — but as of 2025 <strong>still barred from leaving Morocco</strong>. Began another hunger strike in April 2025 when prevented from traveling to lecture at the Sorbonne.
-          <div><span class="j-sent">1 year (pardoned)</span><span class="j-un">Still travel-banned 2025</span></div>
-        </div>
+    <div class="step-row">
+      <div class="step-num green">!</div>
+      <div class="step-text">
+        <strong style="color:#2CBF6A;">Lakome</strong> (2010) — arguably the most genuinely independent voice. Broke "Danielgate" and investigated Majidi's finances. <strong class="hl" style="color:var(--ma-red);">Banned October 2013.</strong>
       </div>
     </div>
   </div>
-
-  <div style="text-align:center;margin-top:10px;font-size:12px;color:#555;">All four imprisoned journalists were pardoned July 2024 · All convictions remain on record · RSF: harassment has <em>intensified</em> since</div>
 </section>
 
-<!-- ─── SLIDE 12: Part II Title ───────────────────────── -->
+<!-- Slide 11: HACA — the regulator -->
 <section data-background-color="#000">
-  <svg class="star-deco" style="left:50%;top:50%;transform:translate(-50%,-50%);width:500px;height:500px;" viewBox="0 0 100 100">
-    <polygon points="50,5 61,37 95,37 67,57 78,89 50,69 22,89 33,57 5,37 39,37" fill="#006233"/>
-  </svg>
-  <div style="position:relative;z-index:1;">
-    <p style="font-size:13px;font-weight:700;letter-spacing:4px;color:var(--mg);margin-bottom:12px;">PART II</p>
-    <p class="slide-title">Global Tech<br>vs State</p>
-    <p class="slide-sub" style="margin-top:14px;">The role of Meta, Google, and the platforms the palace cannot own</p>
+  <div style="max-width:1000px; margin:0 auto;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:4px; text-align:left;">HACA — the "independent" regulator</p>
+    <p class="label" style="text-align:left;">The 9-seat decision-making body of the Conseil Supérieur de la Communication Audiovisuelle:</p>
+
+    <div class="haca-grid" style="margin-top:24px; grid-template-columns: repeat(9, 1fr);">
+      <div class="haca-seat king">K</div>
+      <div class="haca-seat king">K</div>
+      <div class="haca-seat king">K</div>
+      <div class="haca-seat king">K</div>
+      <div class="haca-seat king">K</div>
+      <div class="haca-seat pm">PM</div>
+      <div class="haca-seat pm">PM</div>
+      <div class="haca-seat parl">P</div>
+      <div class="haca-seat parl">P</div>
+    </div>
+
+    <div class="legend" style="margin-top:18px;">
+      <span><span class="dot" style="background:var(--ma-red);"></span>Appointed by the King (5)</span>
+      <span><span class="dot" style="background:var(--ma-gold);"></span>Appointed by the PM — who is himself appointed by the King (2)</span>
+      <span><span class="dot" style="background:#333; border:1px solid #555;"></span>Parliament chambers (2)</span>
+    </div>
+
+    <div class="info-box" style="margin-top:18px;">
+      <em>"A close look at HACA sheds doubt on its self-proclaimed independence... It is clear that the state holds all the power within HACA's highest decision-making apparatus."</em>
+      <br><span class="muted" style="font-size:12px;">— Simon Fraser University</span>
+    </div>
   </div>
 </section>
 
-<!-- ─── SLIDE 13: Platform Dominance ─────────────────── -->
-<section data-background-color="#000" data-auto-animate>
-  <p class="part-label">Morocco's Real Media Landscape</p>
-  <p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;text-align:left;max-width:1000px;margin-left:auto;margin-right:auto;">Platform Dominance — 35.3M people online (92.2% penetration, Jan 2025)</p>
-  <p style="font-size:13px;color:#555;text-align:left;max-width:1000px;margin:0 auto 14px;">93% of connections are mobile · Average user: 6 social accounts · 2.5 hours/day on platforms</p>
-
-  <div style="max-width:1000px;margin:0 auto;" id="platform-bars">
-    <div class="p-bar-row">
-      <div class="p-name">WhatsApp</div>
-      <div class="p-track"><div class="p-fill" style="background:linear-gradient(90deg,#25d366,#128c7e);" data-pct="76">76%</div></div>
-      <div class="p-pct">76%</div>
-    </div>
-    <div class="p-bar-row">
-      <div class="p-name">Instagram</div>
-      <div class="p-track"><div class="p-fill" style="background:linear-gradient(90deg,#e1306c,#833ab4);" data-pct="70">~70%</div></div>
-      <div class="p-pct">~70%</div>
-    </div>
-    <div class="p-bar-row">
-      <div class="p-name">Facebook</div>
-      <div class="p-track"><div class="p-fill" style="background:linear-gradient(90deg,#1877f2,#165fcc);" data-pct="65">65%</div></div>
-      <div class="p-pct">65%</div>
-    </div>
-    <div class="p-bar-row">
-      <div class="p-name">YouTube</div>
-      <div class="p-track"><div class="p-fill" style="background:linear-gradient(90deg,#ff0000,#cc0000);" data-pct="55">21.3M users</div></div>
-      <div class="p-pct">21.3M</div>
-    </div>
-    <div class="p-bar-row">
-      <div class="p-name">Google Search</div>
-      <div class="p-track"><div class="p-fill" style="background:linear-gradient(90deg,#4285f4,#ea4335);" data-pct="93">93.84% market share</div></div>
-      <div class="p-pct">93.8%</div>
-    </div>
-    <div class="p-bar-row">
-      <div class="p-name">TikTok</div>
-      <div class="p-track"><div class="p-fill" style="background:linear-gradient(90deg,#010101,#ee1d52);" data-pct="24">~9M users</div></div>
-      <div class="p-pct">~9M</div>
-    </div>
-  </div>
-
-  <div style="max-width:1000px;margin:14px auto 0;background:rgba(0,98,51,0.08);border:1px solid rgba(0,98,51,0.3);border-radius:8px;padding:10px 16px;font-size:13px;color:#bbb;">
-    📱 <span class="hl-green">43% of 18–29 year-olds</span> spend 3–5 hours daily on platforms · <span class="hl-green">78%</span> of Moroccans get news online
-    <br>The weakening of traditional media was <strong style="color:#fff;">not accidental</strong> — it was a deliberate strategy that produced an <em>unintended consequence</em>.
-  </div>
-</section>
-
-<!-- ─── SLIDE 14: Three Protest Movements ────────────── -->
+<!-- Slide 12: Advertising as a weapon -->
 <section data-background-color="#000">
-  <div style="display:flex;gap:40px;align-items:center;max-width:1100px;margin:0 auto;">
-    <div style="flex:1;">
-      <p class="part-label">Three Movements That Shocked the Palace</p>
-      <p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:16px;">When algorithms replaced editors</p>
-
-      <div class="timeline-event">
-        <div class="tl-year">2011</div>
-        <div class="tl-dot" style="background:var(--mr);"></div>
-        <div class="tl-body">
-          <span class="tl-highlight">February 20 Movement</span> — Arab Spring-inspired. Facebook groups organized simultaneous protests in <strong>50+ towns</strong> (expanding to 110 by April). Facebook was searched more than Google in Morocco that year. Citizen outlet <em>Mamfakinch</em> became the first citizen journalism platform.
-        </div>
-      </div>
-
-      <div class="timeline-event">
-        <div class="tl-year">2016</div>
-        <div class="tl-dot" style="background:var(--gold);"></div>
-        <div class="tl-body">
-          <span class="tl-highlight">Hirak Rif Movement</span> — Triggered by fishmonger Mouhcine Fikri crushed in a garbage truck. Nasser Zefzafi used Facebook Live: one broadcast garnered <strong>350,000 followers, 13,000 shares, 33,000 comments in under 20 minutes</strong>. 700+ protest events. Government response: 150+ arrested, sentences up to 20 years.
-        </div>
-      </div>
-
-      <div class="timeline-event">
-        <div class="tl-year">2018</div>
-        <div class="tl-dot" style="background:var(--mg);"></div>
-        <div class="tl-body">
-          <span class="tl-highlight">Boycott Movement</span> — Anonymous activists targeted Afriquia Gas, Sidi Ali water, Centrale Danone via WhatsApp and Facebook. Within 2 weeks: <strong>90%+ awareness, 54% participation</strong>. Entirely leaderless — impossible to arrest organizers.
-        </div>
-      </div>
+  <p class="slide-title" style="font-size:50px;">Advertising as a Weapon</p>
+  <img src="money.gif" style="max-width:40%; max-height:38vh; border-radius:8px; margin-top:20px;">
+  <div class="row" style="max-width:1000px; margin:30px auto 0; gap:12px;">
+    <div class="card" style="text-align:left;">
+      <p class="label" style="color:var(--ma-gold);font-weight:600;">1 · Boycott</p>
+      <p class="val" style="font-size:13px;">Coordinated ad withdrawals by the royal holding to strangle critical outlets.</p>
     </div>
-
-    <div style="flex:0 0 280px;text-align:center;">
-      <img src="https://media2.giphy.com/media/FT9s37xDutmcDiSQmj/giphy.gif" style="width:100%;border-radius:12px;border:1px solid #222;margin-bottom:10px;">
-      <img src="https://media2.giphy.com/media/J5SUxrwpoP1oFOliYe/giphy.gif" style="width:100%;border-radius:12px;border:1px solid #222;">
+    <div class="card" style="text-align:left;">
+      <p class="label" style="color:var(--ma-gold);font-weight:600;">2 · Prop up</p>
+      <p class="val" style="font-size:13px;">Pro-gov newspapers receive <span class="hl" style="color:var(--ma-red);">11–14×</span> more ad revenue than sales justify.</p>
+    </div>
+    <div class="card" style="text-align:left;">
+      <p class="label" style="color:var(--ma-gold);font-weight:600;">3 · Opaque</p>
+      <p class="val" style="font-size:13px;">State advertising distributed with no transparent criteria — an "opaque and unjustified procedure."</p>
     </div>
   </div>
 </section>
 
-<!-- ─── SLIDE 15: The 2018 Boycott ───────────────────── -->
+<!-- Slide 13: The casualties — independent press closed -->
 <section data-background-color="#000">
-  <div style="display:flex;gap:40px;align-items:center;max-width:1100px;margin:0 auto;">
-    <div style="flex:0 0 280px;text-align:center;">
-      <img src="https://media1.giphy.com/media/Z3VS4kCCgWf5G6AZiG/giphy.gif" style="width:100%;border-radius:12px;border:1px solid #222;">
-    </div>
+  <div style="max-width:1000px; margin:0 auto; text-align:left;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:14px;">The casualties</p>
 
-    <div style="flex:1;">
-      <p class="part-label">April 20, 2018</p>
-      <p style="font-size:26px;font-weight:700;color:#fff;margin-bottom:16px;">The Boycott the State Could Not Stop</p>
-
-      <p class="label">Participation within 2 weeks</p>
-      <div class="boycott-bar-wrap" id="boywrap">
-        <div class="boycott-bar" id="boybar"></div>
-        <div class="boycott-bar-label">54% of Moroccans participated</div>
+    <div class="row" style="gap:12px;">
+      <div class="card red" style="text-align:left;">
+        <p class="label" style="color:#ffb8ba;">Jan 2010</p>
+        <p class="val" style="font-size:17px;">Le Journal Hebdomadaire</p>
+        <p class="label" style="color:#ffb8ba; font-size:11px; margin-top:6px;">"Morocco's most courageous publication"</p>
       </div>
-
-      <div class="row" style="margin-top:14px;">
-        <div class="stat-box" style="flex:1;border-color:var(--mr);">
-          <div class="stat-num" style="font-size:36px;color:var(--mr);">€178M</div>
-          <div class="stat-desc">Centrale Danone lost<br>over a third of its sales</div>
-        </div>
-        <div class="stat-box" style="flex:1;border-color:var(--gold);">
-          <div class="stat-num" style="font-size:36px;color:var(--gold);">90%+</div>
-          <div class="stat-desc">of Moroccans were aware within 2 weeks</div>
-        </div>
-        <div class="stat-box" style="flex:1;border-color:var(--mg);">
-          <div class="stat-num" style="font-size:36px;color:#5ec47a;">70%</div>
-          <div class="stat-desc">of 15–24 year-olds joined the boycott</div>
-        </div>
+      <div class="card red" style="text-align:left;">
+        <p class="label" style="color:#ffb8ba;">Oct 2010</p>
+        <p class="val" style="font-size:17px;">Nichane</p>
+        <p class="label" style="color:#ffb8ba; font-size:11px; margin-top:6px;">Best-selling weekly — killed by ONA/SNI's ad boycott</p>
       </div>
-
-      <div class="info-box" style="margin-top:12px;">
-        Targets: <span class="hl-red">Afriquia Gas</span> (owned by billionaire PM Akhannouch) · <span class="hl-red">Sidi Ali water</span> · <span class="hl-red">Centrale Danone</span><br>
-        <span style="color:#aaa;">The government's delayed response: <strong style="color:#fff;">Draft Law 22.20</strong> — would have criminalized advocating boycotts on social media with <strong>up to 3 years</strong>. Massive public backlash forced withdrawal.</span>
+      <div class="card red" style="text-align:left;">
+        <p class="label" style="color:#ffb8ba;">Oct 2013</p>
+        <p class="val" style="font-size:17px;">Lakome</p>
+        <p class="label" style="color:#ffb8ba; font-size:11px; margin-top:6px;">Banned — editor arrested under anti-terror law</p>
+      </div>
+      <div class="card red" style="text-align:left;">
+        <p class="label" style="color:#ffb8ba;">2018 →</p>
+        <p class="val" style="font-size:17px;">Akhbar Al-Youm</p>
+        <p class="label" style="color:#ffb8ba; font-size:11px; margin-top:6px;">"Last independent paper" — editors imprisoned one by one</p>
       </div>
     </div>
+
+    <p style="font-size:14px; color:#aaa; margin-top:22px; text-align:center;">Every major independent publication shuttered over the past two decades.</p>
   </div>
 </section>
 
-<!-- ─── SLIDE 16: Meta Requests + Surveillance ───────── -->
+<!-- Slide 14: The Three Red Lines -->
 <section data-background-color="#000">
-  <p class="part-label">State Engagement with Platforms</p>
-  <p style="font-size:22px;font-weight:700;color:#fff;margin-bottom:14px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">Morocco Leads Africa in Meta Data Demands</p>
+  <div style="max-width:1000px; margin:0 auto; text-align:left;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:6px;">The three red lines</p>
+    <p class="label" style="margin-bottom:18px;">Cross them and you will not be spared. 80% of Moroccan media professionals admit to self-censorship.</p>
 
-  <div style="max-width:1100px;margin:0 auto;display:flex;gap:16px;align-items:flex-start;">
-    <div style="flex:1;">
-      <div class="row">
-        <div class="stat-box" style="flex:1;border-color:var(--mr);">
-          <div class="stat-num" style="color:var(--mr);">1,188</div>
-          <div class="stat-desc">Meta data requests<br>Jan–Dec 2024<br><span style="color:#555;font-size:11px;">"Overshadows the rest of Africa" — Morocco World News</span></div>
-        </div>
-        <div class="stat-box" style="flex:1;border-color:var(--gold);">
-          <div class="stat-num" style="color:var(--gold);">78%</div>
-          <div class="stat-desc">of government requests<br>Meta complied with<br>(at least partially)</div>
-        </div>
-        <div class="stat-box" style="flex:1;border-color:#444;">
-          <div class="stat-num" style="color:#aaa;">10</div>
-          <div class="stat-desc">Google content removal<br>orders by end of 2024<br><span style="color:#555;font-size:11px;">All defamation claims</span></div>
-        </div>
-      </div>
-
-      <p style="font-size:14px;font-weight:700;color:#fff;margin:12px 0 8px;">Morocco's Strategy: Surgical, not Blunt</p>
-
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">✕</div>
-        <div class="step-text">No systematic website blocking unlike Egypt, Saudi Arabia, pre-2011 Tunisia</div>
-      </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">!</div>
-        <div class="step-text">Since Sept 2019: at least <strong>10 citizens arrested</strong> for Facebook posts, YouTube videos, rap songs criticizing the monarchy</div>
-      </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">!</div>
-        <div class="step-text">Dec 2020: All 3 security agencies issued joint statement targeting Moroccans <strong>living abroad</strong> for social media posts. Geographic distance provides no protection.</div>
-      </div>
-
-      <div class="info-box" style="margin-top:10px;font-size:12px;">
-        <span class="hl-red">YouTuber Mustapha Semlali</span> — 2 years for criticizing a royal family member<br>
-        <span class="hl-red">Rabie al-Ablaq</span> — 4 years for posts criticizing the king<br>
-        Two individuals received <span class="hl-red">5-year sentences</span> for Facebook posts on Morocco-Israel relations
-      </div>
+    <div class="red-line">
+      <div class="rl-word">Monarchy</div>
+      <div class="rl-desc">The royal family's business interests and personal lives cannot be critically examined.</div>
+    </div>
+    <div class="red-line">
+      <div class="rl-word">Territory</div>
+      <div class="rl-desc">Western Sahara must be discussed <em>exclusively</em> as an integral part of Morocco. Any reference to "occupation" is prosecutable.</div>
+    </div>
+    <div class="red-line">
+      <div class="rl-word">Islam</div>
+      <div class="rl-desc">Cannot be criticized or questioned.</div>
     </div>
 
-    <div style="flex:0 0 220px;">
-      <div class="img-ph" style="height:140px;margin-bottom:10px;">
-        <div class="icon">🌐</div>
-        <div>Africa digital surveillance map<br>Morocco highlighted</div>
-      </div>
-      <div class="card" style="border-color:rgba(193,39,45,0.3);background:rgba(193,39,45,0.05);">
-        <div style="font-size:11px;color:var(--mr);font-weight:700;letter-spacing:1px;margin-bottom:6px;">CHARGES USED</div>
-        <div style="font-size:12px;color:#bbb;line-height:1.7;">
-          "Lack of due respect for the king"<br>
-          "Defaming state institutions"<br>
-          "Insulting the national flag"<br>
-          "Spreading false information"
-        </div>
-      </div>
+    <div class="info-box" style="margin-top:18px;">
+      <strong>Article 267-5</strong> of the penal code: "causing harm" to Islam or the monarchy → <span class="hl">1 to 3 years imprisonment</span>.
+      <br><span class="muted" style="font-size:12px;">The 2016 press code "abolished" prison for journalists — but parliament inserted the charges into the penal code the same day.</span>
     </div>
   </div>
 </section>
 
-<!-- ─── SLIDE 17: Pegasus ─────────────────────────────── -->
+<!-- Slide 15: Silencing journalists — gif -->
 <section data-background-color="#000">
-  <p class="part-label">July 18, 2021 — The Pegasus Project</p>
-  <p style="font-size:20px;font-weight:700;color:#fff;margin-bottom:14px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">The Spy in Your Pocket — Click the phone to infect it</p>
-
-  <div style="max-width:1100px;margin:0 auto;display:flex;gap:24px;align-items:flex-start;">
-    <div style="flex:0 0 340px;text-align:center;">
-      <div style="display:flex;gap:20px;justify-content:center;margin-bottom:16px;">
-        <!-- Target phones -->
-        <div style="text-align:center;">
-          <div class="peg-phone ok" id="phone1" onclick="infectPhone('phone1','journalist')">
-            <div class="peg-icon">📱</div>
-            <div class="peg-label">Omar Radi<br>Journalist</div>
-            <div class="peg-infected-tag">PEGASUS<br>DETECTED</div>
-          </div>
-        </div>
-        <div style="text-align:center;">
-          <div class="peg-phone ok" id="phone2" onclick="infectPhone('phone2','macron')">
-            <div class="peg-icon">📱</div>
-            <div class="peg-label">Emmanuel Macron<br>French President</div>
-            <div class="peg-infected-tag">PEGASUS<br>DETECTED</div>
-          </div>
-        </div>
-        <div style="text-align:center;">
-          <div class="peg-phone ok" id="phone3" onclick="infectPhone('phone3','royals')">
-            <div class="peg-icon">📱</div>
-            <div class="peg-label">King's own wife<br>& Prime Minister</div>
-            <div class="peg-infected-tag">PEGASUS<br>DETECTED</div>
-          </div>
-        </div>
-      </div>
-      <img src="https://media2.giphy.com/media/wp0o7izPvhozgdm53d/giphy.gif" style="width:90%;border-radius:10px;border:1px solid #222;">
-    </div>
-
-    <div style="flex:1;">
-      <div class="row">
-        <div class="stat-box" style="flex:1;border-color:var(--mr);">
-          <div class="stat-num" style="font-size:40px;color:var(--mr);">10,000</div>
-          <div class="stat-desc">phone numbers Morocco<br>selected for surveillance</div>
-        </div>
-        <div class="stat-box" style="flex:1;border-color:var(--gold);">
-          <div class="stat-num" style="font-size:40px;color:var(--gold);">23/37</div>
-          <div class="stat-desc">physically examined phones<br>confirmed infected</div>
-        </div>
-      </div>
-
-      <p style="font-size:14px;font-weight:700;color:#fff;margin:10px 0 6px;">Network Injection — Zero-Click Attack</p>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">1</div>
-        <div class="step-text">Target's phone browser is <strong>silently redirected</strong> to a malicious website — zero user action required</div>
-      </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">2</div>
-        <div class="step-text">Requires either a rogue cell tower or <strong>direct access to mobile operator infrastructure</strong> — only a government can authorize this</div>
-      </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">3</div>
-        <div class="step-text">Citizen Lab identified operator "ATLAS" on Maroc Telecom and Orange Maroc networks in 2018</div>
-      </div>
-
-      <div class="info-box" style="margin-top:10px;font-size:12px;">
-        Beyond journalists: <span class="hl-red">15+ French ministers</span> including Macron · King's wife <span class="hl-gold">Lalla Salma</span> · His own PM <span class="hl-gold">El Othmani</span> · Sahrawi activist <span class="hl-red">Aminatou Haidar</span> (targeted Nov 2021 — months after the revelations).<br><br>
-        Morocco denied everything, sued Amnesty and Forbidden Stories in France and Germany. <strong style="color:#fff;">Every single legal challenge was rejected.</strong>
-      </div>
-    </div>
+  <p class="slide-title" style="font-size:46px;">The weaponized charge</p>
+  <img src="silence.gif" style="max-width:35%; max-height:38vh; border-radius:8px; margin-top:20px;">
+  <div class="info-box" style="max-width:900px; margin:22px auto 0; text-align:center;">
+    <em>"False allegations of sexual assaults and extramarital relations have been abusively and routinely used over the past years by Moroccan authorities as a tool to silence and jail critical journalists."</em>
+    <br><span class="muted" style="font-size:12px;">— Organisation Mondiale Contre la Torture (OMCT)</span>
   </div>
-
-  <div id="peg-msg" style="margin-top:10px;text-align:center;font-size:12px;color:#555;min-height:20px;"></div>
 </section>
 
-<!-- ─── SLIDE 18: The Sovereignty Paradox ────────────── -->
+<!-- Slide 16: The imprisoned journalists -->
 <section data-background-color="#000">
-  <p class="part-label">The Structural Problem</p>
-  <p style="font-size:26px;font-weight:700;color:#fff;margin-bottom:20px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">The Sovereignty Paradox</p>
+  <div style="max-width:1100px; margin:0 auto;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:14px; text-align:left;">Who crossed the lines</p>
 
-  <div style="max-width:1100px;margin:0 auto;display:flex;gap:20px;align-items:flex-start;">
-    <div style="flex:1;">
-      <p style="font-size:14px;font-weight:700;color:var(--mr);margin-bottom:8px;">WHAT THE PALACE BUILT</p>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">✓</div>
-        <div class="step-text">State ownership of <strong>all major TV channels</strong> (SNRT 2025)</div>
+    <div class="row" style="gap:12px;">
+      <div class="j-card">
+        <p class="name">Taoufik Bouachrine</p>
+        <p class="role">Akhbar Al-Youm · founder</p>
+        <p class="charge">Arrested Feb 2018. Trial closed. Pegasus confirmed on two women's phones in the case.</p>
+        <span class="sentence">15 years</span>
       </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">✓</div>
-        <div class="step-text">Al Mada investments in top print media</div>
+      <div class="j-card">
+        <p class="name">Omar Radi</p>
+        <p class="role">investigative journalist</p>
+        <p class="charge">Arrested July 2020, weeks after Amnesty revealed Pegasus infection. TrialWatch: "abuse of process."</p>
+        <span class="sentence">6 years</span>
       </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">✓</div>
-        <div class="step-text">Advertising boycotts → killed every major independent outlet</div>
+      <div class="j-card">
+        <p class="name">Soulaimane Raissouni</p>
+        <p class="role">Akhbar Al-Youm · editor</p>
+        <p class="charge">Arrested 2 days after a COVID-critical editorial. 122-day hunger strike.</p>
+        <span class="sentence">5 years</span>
       </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">✓</div>
-        <div class="step-text">HACA gatekeeping all broadcast licenses</div>
-      </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(193,39,45,0.15);color:var(--mr);">✓</div>
-        <div class="step-text">Legal framework to prosecute dissent</div>
-      </div>
-
-      <div class="moroccan-divider" style="margin:14px 0;"></div>
-
-      <p style="font-size:14px;font-weight:700;color:#5ec47a;margin-bottom:8px;">WHAT IT CANNOT CONTROL</p>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(0,98,51,0.15);color:#5ec47a;">→</div>
-        <div class="step-text">WhatsApp (76% of Moroccans) — end-to-end encrypted, leaderless</div>
-      </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(0,98,51,0.15);color:#5ec47a;">→</div>
-        <div class="step-text">Facebook, YouTube — headquartered in Menlo Park & Mountain View</div>
-      </div>
-      <div class="step-row">
-        <div class="step-num" style="background:rgba(0,98,51,0.15);color:#5ec47a;">→</div>
-        <div class="step-text">Gen Z 212 Movement (2025) — organizing via Discord, 280,000 members</div>
-      </div>
-
-      <div style="margin-top:16px;background:rgba(181,161,107,0.08);border:1px solid rgba(181,161,107,0.3);border-radius:8px;padding:12px 16px;font-size:14px;color:#ddd;font-style:italic;">
-        "Morocco can imprison a journalist.<br>But it cannot imprison <span style="color:var(--gold);font-style:normal;font-weight:700;">an algorithm</span>."
+      <div class="j-card">
+        <p class="name">Maati Monjib</p>
+        <p class="role">historian · trainer</p>
+        <p class="charge">Charged with "undermining state security" — he was training citizen journalists.</p>
+        <span class="sentence">1 year</span>
       </div>
     </div>
 
-    <div style="flex:0 0 320px;">
-      <p class="label" style="text-align:center;margin-bottom:12px;">Digital Morocco 2030 — Dual Strategy</p>
-      <div class="card" style="margin-bottom:8px;border-color:var(--mg);">
-        <div style="font-size:11px;color:#5ec47a;font-weight:700;letter-spacing:1px;margin-bottom:6px;">EXTERNAL — SOVEREIGNTY BUILDING</div>
-        <div style="font-size:12px;color:#bbb;line-height:1.6;">Top-50 e-government · 3,000 startups · 500MW data center in Dakhla · Oracle cloud regions (Casablanca, Settat) · Mistral AI partnership for Arabic/Amazigh models</div>
-      </div>
-      <div class="card" style="border-color:var(--mr);">
-        <div style="font-size:11px;color:var(--mr);font-weight:700;letter-spacing:1px;margin-bottom:6px;">INTERNAL — CONTROL EXTENSION</div>
-        <div style="font-size:12px;color:#bbb;line-height:1.6;">HACA expansion to digital platforms · €100,000 deposit for new media outlets · Elected Press Council dissolved → replaced with government committee · Justice Minister: "Facebook is a serious threat to judicial independence"</div>
-      </div>
-    </div>
+    <p style="font-size:13px; color:#aaa; margin-top:18px; text-align:center;">
+      All four pardoned by the King in July 2024. <span style="color:var(--ma-red);">Convictions remain on record.</span>
+      RSF: <em>"judicial harassment has not only continued but intensified."</em>
+    </p>
   </div>
 </section>
 
-<!-- ─── SLIDE 19: Conclusion ──────────────────────────── -->
+<!-- ============================================= -->
+<!-- PART II: Global Tech vs National Sovereignty   -->
+<!-- ============================================= -->
+
+<!-- Slide 17: Part II divider -->
 <section data-background-color="#000">
-  <p class="part-label">Conclusion</p>
-  <p style="font-size:22px;font-weight:700;color:#fff;margin-bottom:16px;text-align:left;max-width:1100px;margin-left:auto;margin-right:auto;">Concentric Circles of Control — and the Gap It Cannot Close</p>
-
-  <div style="max-width:1100px;margin:0 auto;display:flex;gap:30px;align-items:center;">
-    <!-- Rings -->
-    <div style="flex:0 0 340px;">
-      <div class="rings">
-        <div class="ring ring-1">
-          <div style="position:absolute;top:10px;font-size:10px;color:rgba(193,39,45,0.6);font-weight:700;text-align:center;">SURVEILLANCE<br>Pegasus · Eagle · Hacking Team</div>
-        </div>
-        <div class="ring ring-2">
-          <div style="position:absolute;top:10px;font-size:10px;color:rgba(181,161,107,0.7);font-weight:700;text-align:center;">LEGAL APPARATUS<br>Press code · Penal code · Anti-terrorism</div>
-        </div>
-        <div class="ring ring-3">
-          <div style="position:absolute;top:10px;font-size:10px;color:rgba(0,98,51,0.8);font-weight:700;text-align:center;">ALLIED BILLIONAIRES<br>Akhannouch · Elalamy · Dilami</div>
-        </div>
-        <div class="ring ring-4">
-          <div class="ring-label">THE<br>PALACE<br>Al Mada<br>SNRT<br>HACA</div>
-        </div>
-      </div>
-    </div>
-
-    <div style="flex:1;">
-      <div class="card" style="margin-bottom:10px;border-color:var(--mr);background:rgba(193,39,45,0.05);">
-        <div style="font-size:11px;color:var(--mr);font-weight:700;letter-spacing:1px;margin-bottom:6px;">WHAT THE SYSTEM ACHIEVED</div>
-        <div style="font-size:13px;color:#bbb;line-height:1.6;">Every major TV channel under one state entity. Every major independent newspaper closed. 80% of journalists self-censor. The advertising market rewards compliance and starves dissent.</div>
-      </div>
-
-      <div class="card" style="margin-bottom:10px;border-color:var(--mg);background:rgba(0,98,51,0.05);">
-        <div style="font-size:11px;color:#5ec47a;font-weight:700;letter-spacing:1px;margin-bottom:6px;">WHAT IT FAILED TO ACHIEVE</div>
-        <div style="font-size:13px;color:#bbb;line-height:1.6;">78% of Moroccans now get news from platforms the palace does not own. The 2018 boycott — leaderless, anonymous, devastating — demonstrated that economic protest can be organized entirely through WhatsApp without identifying a single organizer.</div>
-      </div>
-
-      <div style="background:rgba(181,161,107,0.08);border:1px solid rgba(181,161,107,0.3);border-radius:8px;padding:12px 16px;">
-        <div style="font-size:24px;font-weight:700;color:var(--gold);margin-bottom:6px;">28%</div>
-        <div style="font-size:14px;color:#bbb;">Moroccans trust the news. That isn't apathy. That is a <strong style="color:#fff;">verdict</strong> on decades of systematic media capture. Moroccans have already voted — with their screens — and they chose platforms the palace does not control.</div>
-      </div>
-    </div>
-  </div>
+  <p class="tag-line">— part two —</p>
+  <p class="slide-title" style="font-size:68px; line-height:1.05;">Meta, Google,<br>& the Palace.</p>
+  <p style="font-size:22px; color:#aaa; margin-top:18px;">Global platforms vs. national sovereignty.</p>
+  <div class="flag-stripe" style="margin-top:30px; max-width:400px; margin-left:auto; margin-right:auto;"></div>
 </section>
 
-<!-- ─── SLIDE 20: Thank You ───────────────────────────── -->
+<!-- Slide 18: 92% online -->
 <section data-background-color="#000">
-  <svg class="star-deco" style="right:-40px;top:-40px;width:260px;height:260px;opacity:0.06;" viewBox="0 0 100 100">
-    <polygon points="50,5 61,37 95,37 67,57 78,89 50,69 22,89 33,57 5,37 39,37" fill="#C1272D"/>
-  </svg>
-  <svg class="star-deco" style="left:-40px;bottom:-40px;width:260px;height:260px;opacity:0.06;" viewBox="0 0 100 100">
-    <polygon points="50,5 61,37 95,37 67,57 78,89 50,69 22,89 33,57 5,37 39,37" fill="#006233"/>
-  </svg>
-  <div style="position:relative;z-index:1;">
-    <p class="slide-title" style="font-size:70px;">Thank You</p>
-    <div class="moroccan-divider" style="max-width:400px;margin:20px auto;"></div>
-    <p style="font-size:22px;color:var(--ts);margin-top:10px;">Any questions?</p>
-    <div style="margin-top:30px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
-      <span style="font-size:14px;color:#555;">RSF World Press Freedom Index 2025</span>
-      <span style="color:#333;">·</span>
-      <span style="font-size:14px;color:#555;">Reuters Institute Digital News Report 2025</span>
-      <span style="color:#333;">·</span>
-      <span style="font-size:14px;color:#555;">The Pegasus Project — Forbidden Stories / Amnesty</span>
-      <span style="color:#333;">·</span>
-      <span style="font-size:14px;color:#555;">Media Ownership Monitor Morocco — RSF / Le Desk</span>
-      <span style="color:#333;">·</span>
-      <span style="font-size:14px;color:#555;">Freedom House Freedom on the Net 2024–25</span>
+  <p class="slide-title" style="font-size:46px;">Morocco is online.</p>
+  <img src="scroll.gif" style="max-width:30%; max-height:36vh; border-radius:8px; margin-top:20px;">
+  <div class="row" style="max-width:1000px; margin:24px auto 0; gap:14px;">
+    <div class="card green">
+      <p class="label" style="color:#8AE0A8;">Internet penetration</p>
+      <p class="val" style="font-size:42px; font-weight:700;">92.2%</p>
+      <p class="label" style="color:#8AE0A8;">35.3M / 38.3M</p>
+    </div>
+    <div class="card green">
+      <p class="label" style="color:#8AE0A8;">Mobile connections</p>
+      <p class="val" style="font-size:42px; font-weight:700;">~93%</p>
+      <p class="label" style="color:#8AE0A8;">smartphone-first</p>
+    </div>
+    <div class="card green">
+      <p class="label" style="color:#8AE0A8;">Get news online</p>
+      <p class="val" style="font-size:42px; font-weight:700;">78%</p>
+      <p class="label" style="color:#8AE0A8;">on platforms the palace cannot own</p>
     </div>
   </div>
 </section>
 
-</div><!-- .slides -->
-</div><!-- .reveal -->
+<!-- Slide 19: Platform dominance -->
+<section data-background-color="#000">
+  <div style="max-width:1100px; margin:0 auto;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:14px; text-align:left;">The real Moroccan media</p>
+
+    <div class="row" style="gap:12px;">
+      <div class="platform-tile">
+        <p class="plat">WhatsApp</p>
+        <p class="pct">76%</p>
+        <p class="desc">of population</p>
+      </div>
+      <div class="platform-tile">
+        <p class="plat">Facebook</p>
+        <p class="pct">65%</p>
+        <p class="desc">20.55M users</p>
+      </div>
+      <div class="platform-tile">
+        <p class="plat">YouTube</p>
+        <p class="pct">21.3M</p>
+        <p class="desc">potential users</p>
+      </div>
+      <div class="platform-tile">
+        <p class="plat">Google Search</p>
+        <p class="pct">93.84%</p>
+        <p class="desc">market share</p>
+      </div>
+      <div class="platform-tile">
+        <p class="plat">Instagram</p>
+        <p class="pct">70%</p>
+        <p class="desc">of internet users</p>
+      </div>
+      <div class="platform-tile">
+        <p class="plat">TikTok</p>
+        <p class="pct">~9M</p>
+        <p class="desc">rapidly growing</p>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:20px; text-align:center;">
+      <span class="hl-g">43%</span> of Moroccans aged 18–29 spend <strong>3 to 5 hours daily</strong> on social platforms.
+    </div>
+  </div>
+</section>
+
+<!-- Slide 20: The three movements -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:44px;">Three movements, one lesson.</p>
+  <img src="protest.gif" style="max-width:55%; max-height:32vh; border-radius:8px; margin-top:16px;">
+  <div class="row" style="max-width:1100px; margin:20px auto 0; gap:12px;">
+    <div class="card" style="text-align:left;">
+      <p class="label" style="color:var(--ma-gold);font-weight:600;">2011 · February 20 Movement</p>
+      <p class="val" style="font-size:13px;">Facebook groups organised demos in 110 towns. Citizen outlet <em>Mamfakinch</em> was the first independent platform.</p>
+    </div>
+    <div class="card" style="text-align:left;">
+      <p class="label" style="color:var(--ma-gold);font-weight:600;">2016–17 · Hirak Rif</p>
+      <p class="val" style="font-size:13px;">Nasser Zefzafi's Facebook Live: <strong>350k followers, 33k comments in 20 minutes.</strong> 700+ protest events. 150+ arrests.</p>
+    </div>
+    <div class="card" style="text-align:left;">
+      <p class="label" style="color:var(--ma-gold);font-weight:600;">2018 · The Boycott</p>
+      <p class="val" style="font-size:13px;">Leaderless. Anonymous. Entirely on Facebook & WhatsApp.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 21: Interactive 2018 boycott -->
+<section data-background-color="#000">
+  <div style="max-width:1000px; margin:0 auto; text-align:left;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:4px;">2018 — The Boycott that Scared the Palace</p>
+    <p class="label">Slide the timeline. Watch the movement spread.</p>
+
+    <div class="slider-row">
+      <span style="font-size:12px;color:var(--color-text-secondary);">Day 0</span>
+      <input type="range" min="0" max="60" value="0" step="1" id="boy-slider" oninput="updateBoycott(this.value)">
+      <span class="readout" id="boy-day">Day 0</span>
+    </div>
+
+    <div class="boy-wrap" id="boy-area"></div>
+
+    <div class="row" style="gap:12px; margin-top:14px;">
+      <div class="card" style="text-align:left;">
+        <p class="label" style="color:var(--ma-gold);">awareness</p>
+        <p class="val" id="boy-aware" style="font-size:22px; font-weight:700; color:#fff;">0%</p>
+      </div>
+      <div class="card" style="text-align:left;">
+        <p class="label" style="color:var(--ma-gold);">participation</p>
+        <p class="val" id="boy-part" style="font-size:22px; font-weight:700; color:#fff;">0%</p>
+      </div>
+      <div class="card" style="text-align:left;">
+        <p class="label" style="color:var(--ma-gold);">centrale danone loss</p>
+        <p class="val" id="boy-loss" style="font-size:22px; font-weight:700; color:var(--ma-red);">€0M</p>
+      </div>
+    </div>
+
+    <div class="info-box" id="boy-msg" style="margin-top:12px;">
+      The targets: <strong>Afriquia Gas</strong> (PM Akhannouch), <strong>Sidi Ali</strong>, and <strong>Centrale Danone</strong>. Drag the slider to see how quickly it spread.
+    </div>
+  </div>
+</section>
+
+<!-- Slide 22: Meta data requests chart -->
+<section data-background-color="#000">
+  <div style="max-width:1000px; margin:0 auto;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:4px; text-align:left;">Morocco leads Africa in Meta data requests</p>
+    <p class="label" style="text-align:left;">Government requests for user data, 2024 · Meta Transparency Report</p>
+
+    <div style="margin-top:22px;">
+      <div style="display:flex; align-items:center; gap:10px; margin:8px 0;">
+        <div style="width:140px; font-size:13px; color:#fff; text-align:right; font-weight:600;">Morocco 🇲🇦</div>
+        <div class="bar-wrap" style="flex:1; height:36px;">
+          <div class="bar" style="width:100%; background:var(--ma-red);"></div>
+          <span class="bar-label" style="left:12px;">1,188 requests</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin:8px 0;">
+        <div style="width:140px; font-size:13px; color:#aaa; text-align:right;">South Africa</div>
+        <div class="bar-wrap" style="flex:1; height:36px;">
+          <div class="bar" style="width:30%; background:#555;"></div>
+          <span class="bar-label" style="left:12px; color:#aaa;">distant 2nd</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin:8px 0;">
+        <div style="width:140px; font-size:13px; color:#aaa; text-align:right;">Rest of Africa</div>
+        <div class="bar-wrap" style="flex:1; height:36px;">
+          <div class="bar" style="width:12%; background:#333;"></div>
+          <span class="bar-label" style="left:12px; color:#aaa;">"overshadowed"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:22px;">
+      Meta complied with at least part of <span class="hl-g">78%</span> of government requests globally. Morocco rarely <em>blocks</em> websites — instead it surveils, prosecutes individual users, and requests data at scale.
+    </div>
+  </div>
+</section>
+
+<!-- Slide 23: Pegasus — the numbers -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:56px; color:var(--ma-red);">Pegasus</p>
+  <img src="pegasus.gif" style="max-width:35%; max-height:34vh; border-radius:8px; margin-top:16px;">
+  <div class="row" style="max-width:1000px; margin:20px auto 0; gap:12px;">
+    <div class="card red">
+      <p class="label" style="color:#ffb8ba;">phone numbers selected</p>
+      <p class="val" style="font-size:40px; font-weight:700;">~10,000</p>
+    </div>
+    <div class="card red">
+      <p class="label" style="color:#ffb8ba;">journalists targeted</p>
+      <p class="val" style="font-size:40px; font-weight:700;">38+</p>
+    </div>
+    <div class="card red">
+      <p class="label" style="color:#ffb8ba;">phones infected (of 37 examined)</p>
+      <p class="val" style="font-size:40px; font-weight:700;">23</p>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 24: Pegasus targets visualization (hierarchy) -->
+<section data-background-color="#000">
+  <div style="max-width:1000px; margin:0 auto; text-align:left;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:10px;">Who was on Morocco's target list?</p>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>Critical journalists</strong> — Omar Radi, Maati Monjib, and others. Infected via <em>zero-click network injection</em> — the phone's browser silently redirected to a malicious site. Requires mobile operator infrastructure.
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num gold">2</div>
+      <div class="step-text">
+        <strong>Foreign heads of state</strong> — French President <em>Emmanuel Macron</em> and 15+ French ministers. Macron changed his phone and convened an emergency national security meeting.
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num gold">3</div>
+      <div class="step-text">
+        <strong>Human rights defenders</strong> — Sahraoui activist <em>Aminatou Haidar</em>, targeted as recently as November 2021 — months <em>after</em> the Pegasus revelations.
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <strong>The King's own inner circle</strong> — his wife Lalla Salma Bennani, cousin Prince Moulay Hicham, and even his own prime minister Saad-Eddine El Othmani.
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:14px;">
+      Morocco denies everything. It has sued Amnesty, Forbidden Stories, <em>Süddeutsche Zeitung</em>, and journalist Ignacio Cembrero. <span class="hl">Every legal challenge has been rejected.</span>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 25: Image placeholder for Macron / headlines -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:40px;">The international fallout</p>
+  <div style="display:flex; gap:16px; justify-content:center; margin-top:30px; max-width:1100px; margin-left:auto; margin-right:auto;">
+    <div class="img-placeholder" style="width:300px; height:220px;">
+      <div>
+        <span class="tag">Image placeholder</span>
+        Macron headline<br><em style="color:#666;">Le Monde, July 2021</em>
+      </div>
+    </div>
+    <div class="img-placeholder" style="width:300px; height:220px;">
+      <div>
+        <span class="tag">Image placeholder</span>
+        Pegasus Project cover<br><em style="color:#666;">Forbidden Stories</em>
+      </div>
+    </div>
+    <div class="img-placeholder" style="width:300px; height:220px;">
+      <div>
+        <span class="tag">Image placeholder</span>
+        Amnesty Security Lab report<br><em style="color:#666;">network injection diagram</em>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:14px; color:#aaa; margin-top:22px;">Morocco's surveillance reach put it on the front page of <em>Le Monde</em>, <em>Washington Post</em>, <em>The Guardian</em>, and 14 others.</p>
+</section>
+
+<!-- Slide 26: The sovereignty paradox -->
+<section data-background-color="#000">
+  <div style="max-width:1000px; margin:0 auto;">
+    <p class="tag-line">— the paradox —</p>
+    <p class="slide-title" style="font-size:42px; line-height:1.15;">The palace can imprison<br>a journalist.</p>
+    <p class="slide-title" style="font-size:42px; line-height:1.15; color:var(--ma-gold); margin-top:12px;">It cannot imprison an algorithm.</p>
+
+    <div class="info-box" style="margin-top:30px; text-align:center;">
+      Decades of control — SNRT, Al Mada, HACA, advertising, the red lines — worked when information flowed through owned channels. Now <span class="hl-g">78% of Moroccans</span> get news from Menlo Park and Mountain View.
+    </div>
+  </div>
+</section>
+
+<!-- Slide 27: Digital Morocco 2030 + HACA expansion -->
+<section data-background-color="#000">
+  <div style="max-width:1100px; margin:0 auto; text-align:left;">
+    <p class="label" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:14px;">The dual response</p>
+
+    <div class="row" style="gap:14px;">
+      <div class="card green" style="text-align:left;">
+        <p class="label" style="color:#8AE0A8;font-weight:600;">Externally — Digital Morocco 2030</p>
+        <p class="val" style="font-size:13px; color:#fff;">
+          • Top-50 global e-gov ranking<br>
+          • 3,000 startups<br>
+          • 500 MW Dakhla data center<br>
+          • Oracle cloud in Casablanca & Settat<br>
+          • Mistral AI for Arabic & Amazigh<br>
+          • "Cloud First" national roadmap
+        </p>
+      </div>
+      <div class="card red" style="text-align:left;">
+        <p class="label" style="color:#ffb8ba;font-weight:600;">Internally — extending the old playbook</p>
+        <p class="val" style="font-size:13px; color:#fff;">
+          • HACA expansion into a "digital watchdog"<br>
+          • Content removal orders to global platforms<br>
+          • June 2023 — elected press council dissolved<br>
+          • <span class="hl" style="color:#ff9b9e;">€100,000 deposit</span> required for new outlets<br>
+          • Joint DGSN/DGST/DGED warning to Moroccans abroad
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:18px; text-align:center;">
+      Researchers call it <strong>"infrastructural capture"</strong> — Moroccan newsrooms depend on Google and Facebook for tools, audience analytics, and funding. The state controls traditional media; global platforms control the digital infrastructure both rely on.
+    </div>
+  </div>
+</section>
+
+<!-- Slide 28: Conclusion -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:48px;">Concentric Circles of Control</p>
+  <div style="max-width:800px; margin:24px auto 0; text-align:left;">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>The monarchy</strong> — Al Mada, SNRT, Le360.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Billionaire allies</strong> — Akhannouch, Elalamy, Charaï, Dilami.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>Regulatory apparatus</strong> — HACA, press code, penal code, anti-terror law.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-text"><strong>Surveillance infrastructure</strong> — Pegasus, Eagle, Hacking Team, Circles.</div>
+    </div>
+  </div>
+  <p style="font-size:18px; color:var(--ma-gold); margin-top:26px; font-weight:600;">Moroccans have already voted with their screens.</p>
+</section>
+
+<!-- Slide 29: Final punch -->
+<section data-background-color="#000">
+  <p class="slide-title" style="font-size:52px;">28% trust.</p>
+  <p class="slide-title" style="font-size:52px; margin-top:10px; color:var(--ma-red);">That is the verdict.</p>
+  <div class="flag-stripe" style="margin-top:40px; max-width:600px; margin-left:auto; margin-right:auto;"></div>
+</section>
+
+<!-- Slide 30: Thank you -->
+<section data-background-color="#000">
+  <p class="slide-title">Shukran.</p>
+  <p style="font-size:24px; color:#aaa; margin-top:20px;">Questions?</p>
+  <div class="flag-stripe" style="margin-top:40px; max-width:400px; margin-left:auto; margin-right:auto;"></div>
+</section>
+
+</div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script>
 Reveal.initialize({
-  hash: true, controls: true, progress: true, center: true, transition: 'slide'
+  hash: true,
+  controls: true,
+  progress: true,
+  center: true,
+  transition: 'slide'
 });
 
-/* ── Platform bars: animate when slide 13 becomes active ── */
-Reveal.on('slidechanged', function(event) {
-  var idx = event.indexh;
-
-  /* Platform bars (slide index 12 = 0-based 13th slide) */
-  if (idx === 12) {
-    var fills = document.querySelectorAll('.p-fill');
-    fills.forEach(function(el) {
-      var pct = parseFloat(el.getAttribute('data-pct'));
-      setTimeout(function() { el.style.width = pct + '%'; }, 200);
-    });
-  }
-
-  /* Boycott bar (slide index 14) */
-  if (idx === 14) {
-    setTimeout(function() {
-      var bar = document.getElementById('boybar');
-      if (bar) bar.style.width = '54%';
-    }, 400);
-  }
-});
-
-/* ── Pegasus phone infection demo ── */
-var pegMessages = {
-  journalist: 'Omar Radi\'s phone infected via network injection — zero-click, no user action needed. Amnesty confirmed it ran through Maroc Telecom infrastructure.',
-  macron: 'Emmanuel Macron\'s number selected by Moroccan services in 2019. He changed his phone and convened an emergency national security meeting.',
-  royals: 'Even the king\'s own inner circle was targeted: wife Lalla Salma, cousin Prince Moulay Hicham, and PM Saad-Eddine El Othmani.'
-};
-
-function infectPhone(id, type) {
-  var phone = document.getElementById(id);
-  if (!phone) return;
-  phone.classList.remove('ok');
-  phone.classList.add('infected');
-  var msg = document.getElementById('peg-msg');
-  if (msg) {
-    msg.style.color = '#C1272D';
-    msg.textContent = '⚠ ' + pegMessages[type];
+/* ========================================
+   2018 Boycott simulator
+   ======================================== */
+function initBoycottDots() {
+  var area = document.getElementById('boy-area');
+  if (!area || area.childElementCount > 0) return;
+  var w = area.offsetWidth || 900;
+  var h = 160;
+  // Seed ~300 dots at random positions
+  for (var i = 0; i < 300; i++) {
+    var d = document.createElement('div');
+    d.className = 'boy-dot';
+    d.style.left = Math.random() * (w - 6) + 'px';
+    d.style.top = Math.random() * (h - 6) + 'px';
+    // random order of appearance 0..1
+    d.dataset.order = Math.random();
+    area.appendChild(d);
   }
 }
 
-/* ── Red line cards (handled inline via onclick) ── */
+function updateBoycott(day) {
+  day = parseInt(day);
+  document.getElementById('boy-day').textContent = 'Day ' + day;
 
-/* ── Journalist accordion (handled inline via onclick) ── */
+  // Awareness/participation curves (rough, matching source data)
+  // Day 0 → 0, day 14 → 90% awareness, 54% participation
+  var aware = Math.min(0.92, (day / 14) * 0.92);
+  var part = Math.min(0.54, (day / 14) * 0.54);
+  // Danone loss grows over the full campaign (max ~€178M)
+  var loss = Math.min(178, (day / 60) * 178);
+
+  document.getElementById('boy-aware').textContent = Math.round(aware * 100) + '%';
+  document.getElementById('boy-part').textContent = Math.round(part * 100) + '%';
+  document.getElementById('boy-loss').textContent = '€' + Math.round(loss) + 'M';
+
+  initBoycottDots();
+  var dots = document.querySelectorAll('.boy-dot');
+  dots.forEach(function(d) {
+    var order = parseFloat(d.dataset.order);
+    if (order < aware) {
+      d.style.opacity = '1';
+      d.style.transform = 'scale(1.4)';
+      d.style.background = order < part ? 'var(--ma-red)' : '#D4AF37';
+    } else {
+      d.style.opacity = '0';
+      d.style.transform = 'scale(1)';
+    }
+  });
+
+  var msg = document.getElementById('boy-msg');
+  if (day === 0) {
+    msg.innerHTML = 'The targets: <strong>Afriquia Gas</strong> (PM Akhannouch), <strong>Sidi Ali</strong>, and <strong>Centrale Danone</strong>. Drag the slider to see how quickly it spread.';
+  } else if (day < 7) {
+    msg.innerHTML = 'Day ' + day + ': the hashtag is going viral on Facebook and WhatsApp. No leader, no organisation, no one to arrest.';
+  } else if (day < 14) {
+    msg.innerHTML = 'Day ' + day + ': over 90% aware, 54% actively participating. <span class="hl-g">70% of Moroccans aged 15–24</span> have joined.';
+  } else if (day < 40) {
+    msg.innerHTML = 'Day ' + day + ': Centrale Danone sales collapse. The state has no one to identify, no one to imprison.';
+  } else {
+    msg.innerHTML = 'By day ' + day + ': Danone loses <strong>a third of sales</strong> — ~€178M. Draft Law 22.20 (2020) later tried to criminalise calling for boycotts on social media. It was withdrawn after backlash.';
+  }
+}
+
+// Init on slide change and load
+Reveal.on('slidechanged', function(event) {
+  if (event.indexh >= 0) {
+    var sec = document.querySelectorAll('.reveal .slides section')[event.indexh];
+    if (sec && sec.querySelector('#boy-area')) {
+      initBoycottDots();
+      updateBoycott(document.getElementById('boy-slider').value);
+    }
+  }
+});
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (document.getElementById('boy-area')) {
+      initBoycottDots();
+      updateBoycott(0);
+    }
+  }, 400);
+});
 </script>
 </body>
 </html>
