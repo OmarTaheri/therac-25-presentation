@@ -2,8 +2,6 @@
 
 Browser-based talks that use simulations, visual storytelling, and source-driven case studies to explain software failure, media systems, and power.
 
-> Suggested repository name: `interactive-presentations`
-
 Live collection: [therac25.omartaheri.com](https://therac25.omartaheri.com)
 
 <!-- Add a montage of both decks here. -->
@@ -31,8 +29,8 @@ Entry point: `morocco/index.html`
 ## Run locally
 
 ```bash
-git clone https://github.com/OmarTaheri/therac-25-presentation.git
-cd therac-25-presentation
+git clone https://github.com/OmarTaheri/interactive-presentations.git
+cd interactive-presentations
 python -m http.server 8000
 ```
 
